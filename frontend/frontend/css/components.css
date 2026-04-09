@@ -1,0 +1,252 @@
+/* ============================================================
+   MarketMind AI — components.css
+   Reusable UI components
+   ============================================================ */
+
+/* ── Toast Notifications ────────────────────────────────────── */
+#toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+}
+
+.toast {
+  background: rgba(18, 20, 28, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: 28px;
+  padding: 14px 18px;
+  min-width: 280px;
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  animation: slideIn 0.3s ease forwards;
+}
+
+.toast-success {
+  border-left: 4px solid #10b981;
+}
+.toast-success i {
+  color: #10b981;
+}
+
+.toast-error {
+  border-left: 4px solid #ef4444;
+}
+.toast-error i {
+  color: #ef4444;
+}
+
+.toast-info {
+  border-left: 4px solid #6366f1;
+}
+
+.toast-warning {
+  border-left: 4px solid #f59e0b;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(120%); }
+  to   { transform: translateX(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+.toast.dismissing {
+  animation: fadeOut 0.3s forwards;
+}
+
+/* ── Skeleton Shimmer ───────────────────────────────────────── */
+.skeleton {
+  background: rgba(30, 32, 44, 0.6);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+
+.skeleton-row {
+  height: 20px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+}
+
+.skeleton-row.tall {
+  height: 60px;
+}
+
+.skeleton-row.short {
+  width: 60%;
+}
+
+.skeleton-chart {
+  height: 280px;
+  border-radius: 16px;
+}
+
+/* ── Chart Container ────────────────────────────────────────── */
+.chart-container {
+  position: relative;
+  height: 280px;
+  width: 100%;
+}
+
+/* ── Search Dropdown Items ──────────────────────────────────── */
+.search-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid rgba(99, 102, 241, 0.08);
+}
+
+.search-item:hover {
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.search-item:last-child {
+  border-bottom: none;
+}
+
+.search-item .symbol {
+  font-weight: 700;
+  color: #eef2ff;
+}
+
+.search-item .company {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.search-no-results {
+  padding: 16px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+/* ── Loading Spinner ────────────────────────────────────────── */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(99, 102, 241, 0.3);
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.btn-loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── Stat Card ──────────────────────────────────────────────── */
+.stat-label {
+  color: #9ca3af;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.stat-change {
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+/* ── Badge ──────────────────────────────────────────────────── */
+.badge {
+  background: #1e1f2a;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* ── Trend Indicator ────────────────────────────────────────── */
+.trend-up {
+  color: #10b981;
+}
+
+.trend-down {
+  color: #ef4444;
+}
+
+/* ── Confidence Bar ─────────────────────────────────────────── */
+.confidence-bar {
+  background: #1e1f2a;
+  border-radius: 20px;
+  height: 6px;
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  border-radius: 20px;
+}
+
+/* ── Page Header ────────────────────────────────────────────── */
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.page-subtitle {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+/* ── Empty State ────────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: #9ca3af;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  color: rgba(99, 102, 241, 0.4);
+}

@@ -1,0 +1,27 @@
+<!-- Page Header -->
+<div class="page-header">
+  <h1 class="page-title">Sentiment Analysis</h1>
+</div>
+
+<!-- Sentiment Timeline Card -->
+<div class="glass-card" style="padding: 22px; margin-bottom: 26px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+    <h3 style="font-size: 1rem; font-weight: 700;"><i class="fas fa-chart-simple"></i> Sentiment Timeline</h3>
+    <button id="analyze-btn" class="btn-primary" style="padding: 10px 22px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px;">
+      <i class="fas fa-magnifying-glass-chart"></i> Analyze Now
+    </button>
+  </div>
+  <div class="chart-container">
+    <canvas id="sentiment-bar-chart"></canvas>
+  </div>
+</div>
+
+<!-- Daily Sentiment Data Table Card -->
+<div class="glass-card" style="padding: 22px;">
+  <h3 style="margin-bottom: 18px; font-size: 1rem; font-weight: 700;">
+    <i class="fas fa-table"></i> Daily Sentiment Data
+  </h3>
+  <div id="sentiment-table" style="overflow-x: auto;">
+    <!-- Table injected by JS -->
+  </div>
+</div>

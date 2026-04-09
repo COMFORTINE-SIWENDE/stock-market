@@ -1,0 +1,9 @@
+2026-04-02 00:50:54 | INFO     | __main__:<module>:310 - Starting server on http://0.0.0.0:8000
+2026-04-02 00:53:37 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 5 days for AAPL confidence=0.5 source=local
+2026-04-02 00:54:12 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 7 days for AAPL confidence=0.5 source=local
+2026-04-02 00:55:53 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 5 days for AAPL confidence=0.5 source=local
+2026-04-02 00:56:32 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 7 days for AAPL confidence=0.5 source=local
+2026-04-02 00:57:04 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 5 days for AAPL confidence=0.5 source=local
+2026-04-02 00:58:47 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 7 days for AAPL confidence=0.5 source=local
+2026-04-02 00:59:41 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 7 days for AAPL confidence=0.5 source=local
+2026-04-02 01:00:13 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 5 days for AAPL confidence=0.5 source=local

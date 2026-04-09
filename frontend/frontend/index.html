@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>MarketMind AI | Sentiment-Powered Stock Predictions</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome 6.5.1 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Chart.js 4 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- App CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <div id="app-shell">
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar">
+            <div class="sidebar-brand">
+                <i class="fas fa-chart-line"></i>
+                <span class="brand-text">Market<span class="gradient-text">Mind AI</span></span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#/dashboard" class="nav-link" data-route="/dashboard">
+                    <i class="fas fa-gauge-high"></i>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a href="#/predictions" class="nav-link" data-route="/predictions">
+                    <i class="fas fa-brain"></i>
+                    <span class="nav-label">Predictions</span>
+                </a>
+                <a href="#/sentiment" class="nav-link" data-route="/sentiment">
+                    <i class="fas fa-chart-simple"></i>
+                    <span class="nav-label">Sentiment</span>
+                </a>
+                <a href="#/stocks" class="nav-link" data-route="/stocks">
+                    <i class="fas fa-chart-line"></i>
+                    <span class="nav-label">Stocks</span>
+                </a>
+                <a href="#/history" class="nav-link" data-route="/history">
+                    <i class="fas fa-clock-rotate-left"></i>
+                    <span class="nav-label">History</span>
+                </a>
+                <a href="#/profile" class="nav-link" data-route="/profile">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="nav-label">Profile</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div id="main-wrapper">
+
+            <!-- Top Bar -->
+            <header id="top-bar">
+                <!-- Hamburger (mobile) -->
+                <button id="hamburger-btn" aria-label="Toggle sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <!-- Brand (visible on mobile) -->
+                <div class="topbar-brand">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Market<span class="gradient-text">Mind AI</span></span>
+                </div>
+
+                <!-- Symbol Search -->
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input
+                        type="text"
+                        id="symbol-search"
+                        placeholder="Search symbol (AAPL, NVDA, TSLA...)"
+                        autocomplete="off"
+                        aria-label="Search stock symbol"
+                        aria-autocomplete="list"
+                        aria-controls="search-dropdown"
+                    >
+                    <div id="search-dropdown" class="search-dropdown" role="listbox" aria-label="Symbol suggestions"></div>
+                </div>
+            </header>
+
+            <!-- Page Content (injected by router) -->
+            <main id="app-content"></main>
+
+        </div><!-- /#main-wrapper -->
+
+    </div><!-- /#app-shell -->
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+    <!-- App Entry Point -->
+    <script type="module" src="js/app.js"></script>
+
+</body>
+</html>

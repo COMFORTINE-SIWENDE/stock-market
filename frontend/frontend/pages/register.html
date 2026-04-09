@@ -1,0 +1,92 @@
+<div style="display: flex; align-items: center; justify-content: center; min-height: 80vh; padding: 24px;">
+  <div class="glass-card" style="max-width: 420px; width: 100%; margin: auto; padding: 32px;">
+
+    <!-- Header -->
+    <div style="text-align: center; margin-bottom: 28px;">
+      <i class="fas fa-user-plus" style="font-size: 2.5rem; color: #6366f1; margin-bottom: 12px; display: block;"></i>
+      <h1 style="font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px;">Create Account</h1>
+      <p style="color: #9ca3af; margin-top: 6px; font-size: 0.9rem;">Join MarketMind AI</p>
+    </div>
+
+    <!-- Form -->
+    <form id="register-form" autocomplete="off">
+      <div>
+        <label style="display: block; font-size: 0.85rem; color: #9ca3af; margin-bottom: 6px;" for="reg-email">Email</label>
+        <input
+          id="reg-email"
+          name="email"
+          type="email"
+          placeholder="you@example.com"
+          style="width: 100%; background: #11131c; border: 1px solid #2d2f3e; border-radius: 12px; padding: 12px 16px; color: white; outline: none; font-family: 'Inter', sans-serif; font-size: 0.9rem; margin-bottom: 16px;"
+        />
+      </div>
+
+      <div>
+        <label style="display: block; font-size: 0.85rem; color: #9ca3af; margin-bottom: 6px;" for="reg-username">Username</label>
+        <input
+          id="reg-username"
+          name="username"
+          type="text"
+          placeholder="Username"
+          style="width: 100%; background: #11131c; border: 1px solid #2d2f3e; border-radius: 12px; padding: 12px 16px; color: white; outline: none; font-family: 'Inter', sans-serif; font-size: 0.9rem; margin-bottom: 16px;"
+        />
+      </div>
+
+      <div>
+        <label style="display: block; font-size: 0.85rem; color: #9ca3af; margin-bottom: 6px;" for="reg-fullname">Full Name</label>
+        <input
+          id="reg-fullname"
+          name="full_name"
+          type="text"
+          placeholder="Full Name"
+          style="width: 100%; background: #11131c; border: 1px solid #2d2f3e; border-radius: 12px; padding: 12px 16px; color: white; outline: none; font-family: 'Inter', sans-serif; font-size: 0.9rem; margin-bottom: 16px;"
+        />
+      </div>
+
+      <div>
+        <label style="display: block; font-size: 0.85rem; color: #9ca3af; margin-bottom: 6px;" for="reg-password">Password</label>
+        <div style="position: relative; margin-bottom: 8px;">
+          <input
+            id="reg-password"
+            name="password"
+            type="password"
+            placeholder="Password"
+            style="width: 100%; background: #11131c; border: 1px solid #2d2f3e; border-radius: 12px; padding: 12px 48px 12px 16px; color: white; outline: none; font-family: 'Inter', sans-serif; font-size: 0.9rem;"
+          />
+          <button
+            type="button"
+            id="toggle-reg-password"
+            aria-label="Toggle password visibility"
+            style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #9ca3af; cursor: pointer; font-size: 1rem; padding: 0;"
+          >
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+        <!-- Password strength indicator -->
+        <div id="password-strength" style="margin-bottom: 16px; font-size: 0.78rem; color: #9ca3af;"></div>
+      </div>
+
+      <div>
+        <label style="display: block; font-size: 0.85rem; color: #9ca3af; margin-bottom: 6px;" for="reg-confirm">Confirm Password</label>
+        <input
+          id="reg-confirm"
+          name="confirm_password"
+          type="password"
+          placeholder="Confirm Password"
+          style="width: 100%; background: #11131c; border: 1px solid #2d2f3e; border-radius: 12px; padding: 12px 16px; color: white; outline: none; font-family: 'Inter', sans-serif; font-size: 0.9rem; margin-bottom: 24px;"
+        />
+      </div>
+
+      <button type="submit" class="btn-primary" style="width: 100%; font-size: 0.95rem;">
+        Create Account
+      </button>
+    </form>
+
+    <!-- Login link -->
+    <p style="text-align: center; margin-top: 20px; color: #9ca3af; font-size: 0.85rem;">
+      Already have an account?
+      <a href="#/login" style="color: #818cf8; text-decoration: none; font-weight: 600;">Sign In</a>
+    </p>
+
+  </div>
+</div>

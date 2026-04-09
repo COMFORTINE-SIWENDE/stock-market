@@ -1,0 +1,415 @@
+/* ============================================================
+   MarketMind AI — main.css
+   Glassmorphism design tokens & base styles
+   ============================================================ */
+
+/* ── Design Tokens ─────────────────────────────────────────── */
+:root {
+  /* Colors */
+  --color-bg-body:        #eef2ff;
+  --color-bg-card:        rgba(18, 20, 28, 0.75);
+  --color-bg-sidebar:     rgba(12, 14, 20, 0.9);
+  --color-bg-topbar:      rgba(18, 20, 28, 0.75);
+  --color-bg-news-card:   rgba(30, 32, 44, 0.6);
+  --color-bg-gauge:       #11131c;
+  --color-bg-input:       #11131c;
+
+  --color-border-card:    rgba(99, 102, 241, 0.15);
+  --color-border-card-hover: rgba(99, 102, 241, 0.4);
+  --color-border-sidebar: rgba(99, 102, 241, 0.1);
+  --color-border-input:   #2d2f3e;
+
+  --color-indigo:         #6366f1;
+  --color-indigo-light:   #818cf8;
+  --color-violet:         #8b5cf6;
+  --color-purple:         #c084fc;
+  --color-blue:           #60a5fa;
+  --color-green:          #10b981;
+  --color-teal:           #34d399;
+  --color-amber:          #f59e0b;
+  --color-red:            #ef4444;
+  --color-text-muted:     #9ca3af;
+  --color-text-dim:       #6b7280;
+
+  /* Blur */
+  --blur-card:    blur(12px);
+  --blur-sidebar: blur(20px);
+  --blur-badge:   blur(4px);
+
+  /* Border-radius */
+  --radius-card:   28px;
+  --radius-news:   16px;
+  --radius-badge:  40px;
+  --radius-gauge:  60px;
+  --radius-sm:     10px;
+
+  /* Gradients */
+  --gradient-text:    linear-gradient(135deg, #c084fc, #60a5fa, #34d399);
+  --gradient-btn:     linear-gradient(135deg, #6366f1, #8b5cf6);
+  --gradient-gauge:   linear-gradient(90deg, #ef4444, #f59e0b, #10b981);
+
+  /* Transitions */
+  --transition-base: all 0.3s ease;
+  --transition-fast: all 0.2s ease;
+}
+
+/* ── Reset ─────────────────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── Body ───────────────────────────────────────────────────── */
+body {
+  font-family: 'Inter', sans-serif;
+  background: url('../../background-image.png') center / cover no-repeat fixed;
+  color: var(--color-bg-body);
+  overflow-x: hidden;
+}
+
+/* ── Custom Scrollbar ───────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #1e1f2a;
+  border-radius: var(--radius-sm);
+}
+::-webkit-scrollbar-thumb {
+  background: #3b3f5c;
+  border-radius: var(--radius-sm);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-indigo);
+}
+
+/* ── Glassmorphism Card ─────────────────────────────────────── */
+.glass-card {
+  background: var(--color-bg-card);
+  backdrop-filter: var(--blur-card);
+  -webkit-backdrop-filter: var(--blur-card);
+  border: 1px solid var(--color-border-card);
+  border-radius: var(--radius-card);
+  transition: var(--transition-base);
+}
+.glass-card:hover {
+  border-color: var(--color-border-card-hover);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Gradient Text ──────────────────────────────────────────── */
+.gradient-text {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── Buttons ────────────────────────────────────────────────── */
+.btn-primary {
+  background: var(--gradient-btn);
+  border: none;
+  padding: 12px 28px;
+  border-radius: var(--radius-badge);
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.3);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px 0 rgba(99, 102, 241, 0.5);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--color-indigo);
+  padding: 10px 24px;
+  border-radius: var(--radius-badge);
+  font-weight: 500;
+  color: var(--color-bg-body);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+.btn-outline:hover {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: var(--color-indigo-light);
+}
+
+/* ── Ticker Badge ───────────────────────────────────────────── */
+.ticker-badge {
+  background: rgba(99, 102, 241, 0.2);
+  backdrop-filter: var(--blur-badge);
+  -webkit-backdrop-filter: var(--blur-badge);
+  padding: 8px 20px;
+  border-radius: var(--radius-badge);
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+}
+
+/* ── Sentiment Gauge ────────────────────────────────────────── */
+.sentiment-gauge {
+  background: var(--color-bg-gauge);
+  border-radius: var(--radius-gauge);
+  height: 12px;
+  overflow: hidden;
+}
+.gauge-fill {
+  height: 100%;
+  background: var(--gradient-gauge);
+  border-radius: var(--radius-gauge);
+}
+
+/* ── News Card ──────────────────────────────────────────────── */
+.news-card {
+  background: var(--color-bg-news-card);
+  border-left: 3px solid var(--color-indigo);
+  padding: 14px;
+  border-radius: var(--radius-news);
+  transition: var(--transition-fast);
+}
+.news-card:hover {
+  background: rgba(45, 48, 64, 0.8);
+  transform: translateX(4px);
+}
+
+/* ── App Shell Layout ───────────────────────────────────────── */
+#app-shell {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+}
+
+/* ── Sidebar ────────────────────────────────────────────────── */
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 100vh;
+  background: var(--color-bg-sidebar);
+  backdrop-filter: var(--blur-sidebar);
+  -webkit-backdrop-filter: var(--blur-sidebar);
+  border-right: 1px solid var(--color-border-sidebar);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 20px 20px;
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: -0.5px;
+  border-bottom: 1px solid var(--color-border-sidebar);
+}
+.sidebar-brand i {
+  font-size: 1.5rem;
+  color: var(--color-indigo);
+}
+.brand-text {
+  color: #eef2ff;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 12px;
+  flex: 1;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 12px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: var(--transition-fast);
+}
+.nav-link i {
+  width: 18px;
+  text-align: center;
+  font-size: 1rem;
+}
+.nav-label {
+  flex: 1;
+}
+.nav-link:hover {
+  background: rgba(99, 102, 241, 0.1);
+  color: #eef2ff;
+}
+.nav-link.active {
+  background: rgba(99, 102, 241, 0.2);
+  color: #eef2ff;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+/* ── Main Wrapper ───────────────────────────────────────────── */
+#main-wrapper {
+  margin-left: 240px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── Top Bar ────────────────────────────────────────────────── */
+#top-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
+  background: var(--color-bg-topbar);
+  backdrop-filter: var(--blur-card);
+  -webkit-backdrop-filter: var(--blur-card);
+  border-bottom: 1px solid var(--color-border-card);
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+
+#hamburger-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #eef2ff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.topbar-brand {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+}
+.topbar-brand i {
+  color: var(--color-indigo);
+}
+
+/* ── Search Wrapper ─────────────────────────────────────────── */
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  max-width: 480px;
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-badge);
+  padding: 6px 6px 6px 16px;
+}
+.search-icon {
+  color: var(--color-indigo);
+  margin-right: 8px;
+  font-size: 0.9rem;
+}
+#symbol-search {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #eef2ff;
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+  padding: 6px 0;
+}
+#symbol-search::placeholder {
+  color: var(--color-text-muted);
+}
+
+#search-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: rgba(18, 20, 28, 0.97);
+  backdrop-filter: var(--blur-card);
+  -webkit-backdrop-filter: var(--blur-card);
+  border: 1px solid var(--color-border-card);
+  border-radius: 16px;
+  overflow: hidden;
+  z-index: 200;
+  display: none;
+}
+#search-dropdown.open {
+  display: block;
+}
+
+/* ── Animations ─────────────────────────────────────────────── */
+@keyframes float {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-5px); }
+  100% { transform: translateY(0px); }
+}
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ── Color Utilities ────────────────────────────────────────── */
+.positive { color: var(--color-green); }
+.negative { color: var(--color-red); }
+.neutral  { color: var(--color-amber); }
+
+/* ── Table Base Styles ──────────────────────────────────────── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  color: #eef2ff;
+}
+th {
+  text-align: left;
+  padding: 12px 8px;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #2d2f3e;
+}
+td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #1e1f2a;
+  vertical-align: middle;
+}
+tbody tr:last-child td {
+  border-bottom: none;
+}
+tbody tr:hover td {
+  background: rgba(99, 102, 241, 0.05);
+}
+
+/* ── App Content ────────────────────────────────────────────── */
+#app-content {
+  flex: 1;
+  padding: 24px;
+}
+
+/* ── Toast Container ────────────────────────────────────────── */
+#toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+}

@@ -1,0 +1,25 @@
+2026-04-01 14:51:06 | INFO     | __main__:<module>:310 - Starting server on http://0.0.0.0:8000
+2026-04-01 14:52:52 | INFO     | __main__:<module>:310 - Starting server on http://0.0.0.0:8000
+2026-04-01 14:57:23 | INFO     | __main__:<module>:310 - Starting server on http://0.0.0.0:8000
+2026-04-01 14:57:37 | ERROR    | __main__:register:61 - register error: Instance <User at 0x7feb1b3074d0> is not bound to a Session; attribute refresh operation cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+2026-04-01 14:58:16 | INFO     | __main__:<module>:310 - Starting server on http://0.0.0.0:8000
+2026-04-01 15:07:01 | INFO     | app.services.data_service:collect_stock_data:31 - Collecting stock data for AAPL from 2026-03-02 to 2026-04-01
+2026-04-01 15:07:02 | INFO     | app.services.data_service:collect_stock_data:69 - Inserted 22 new stock records for AAPL
+2026-04-01 15:07:02 | INFO     | app.services.data_service:collect_news:80 - Collecting news for AAPL (last 24h)
+2026-04-01 15:07:02 | WARNING  | app.tools.data_tools:fetch_news_articles:91 - NEWS_API_KEY not configured, skipping NewsAPI fetch
+2026-04-01 15:07:02 | INFO     | app.services.data_service:collect_news:115 - Inserted 0 new articles for AAPL
+2026-04-01 15:11:05 | INFO     | app.services.data_service:collect_stock_data:31 - Collecting stock data for AAPL from 2024-04-01 to 2026-04-01
+2026-04-01 15:11:07 | INFO     | app.services.data_service:collect_stock_data:69 - Inserted 480 new stock records for AAPL
+2026-04-01 15:11:07 | INFO     | app.services.data_service:collect_news:80 - Collecting news for AAPL (last 24h)
+2026-04-01 15:11:07 | WARNING  | app.tools.data_tools:fetch_news_articles:91 - NEWS_API_KEY not configured, skipping NewsAPI fetch
+2026-04-01 15:11:07 | INFO     | app.services.data_service:collect_news:115 - Inserted 0 new articles for AAPL
+2026-04-01 15:13:09 | INFO     | app.tools.prediction_tools:predict_price:186 - No model for AAPL, training on demand...
+2026-04-01 15:13:09 | INFO     | app.services.prediction_service:train_model:21 - Training model for AAPL
+2026-04-01 15:13:54 | INFO     | app.tools.prediction_tools:save_model_artifacts:102 - Saved model artifacts for AAPL
+2026-04-01 15:13:54 | INFO     | app.services.prediction_service:train_model:50 - Model trained for AAPL: MSE=0.002879 MAE=0.039757
+2026-04-01 15:13:55 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 1 days for AAPL confidence=0.5 source=local
+2026-04-01 15:21:13 | INFO     | app.services.prediction_service:train_model:21 - Training model for AAPL
+2026-04-01 15:21:48 | INFO     | app.tools.prediction_tools:save_model_artifacts:102 - Saved model artifacts for AAPL
+2026-04-01 15:21:48 | INFO     | app.services.prediction_service:train_model:50 - Model trained for AAPL: MSE=0.002461 MAE=0.037439
+2026-04-01 15:21:49 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 5 days for AAPL confidence=0.5 source=local
+2026-04-01 15:22:20 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 3 days for AAPL confidence=0.5 source=local

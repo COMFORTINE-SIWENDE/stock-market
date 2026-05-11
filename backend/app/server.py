@@ -95,6 +95,29 @@ async def logout(request):
         return _err(str(e), 500)
 
 
+async def get_current_user(request):
+    try:
+        token = request.headers.get("Authorization", "").removeprefix("Bearer ").strip()
+        if not token:
+            return _err("Authorization header required", 401)
+        from app.services.auth_service import verify_token
+        with get_sync_session() as session:
+            user = verify_token(session, token)
+        return _json({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "full_name": user.full_name,
+            "is_active": user.is_active,
+            "created_at": str(user.created_at),
+        })
+    except PermissionError as e:
+        return _err(str(e), 401)
+    except Exception as e:
+        logger.error(f"get_current_user error: {e}")
+        return _err(str(e), 500)
+
+
 # ── stocks ───────────────────────────────────────────────────────────────────
 
 async def stock_data(request):
@@ -289,6 +312,7 @@ def create_app():
     app.router.add_post("/auth/register", register)
     app.router.add_post("/auth/login", login)
     app.router.add_post("/auth/logout", logout)
+    app.router.add_get("/auth/me", get_current_user)
     app.router.add_get("/stocks/{symbol}/data", stock_data)
     app.router.add_get("/stocks/{symbol}/price", stock_price)
     app.router.add_get("/stocks/{symbol}/indicators", stock_indicators)

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>History - Stock Predictor</title>
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <a href="dashboard.html" class="nav-brand">
+        <span class="icon">📈</span>
+        Stock Predictor
+      </a>
+      <ul class="nav-links">
+        <li><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></li>
+        <li><a href="stocks.html"><span class="icon">💹</span> Stocks</a></li>
+        <li><a href="predictions.html"><span class="icon">🔮</span> Predictions</a></li>
+        <li><a href="sentiment.html"><span class="icon">📰</span> Sentiment</a></li>
+        <li><a href="history.html" class="active"><span class="icon">📜</span> History</a></li>
+        <li><a href="agent.html"><span class="icon">🤖</span> AI Agent</a></li>
+        <li><a href="profile.html"><span class="icon">👤</span> Profile</a></li>
+        <li><a href="#" id="logout-btn"><span class="icon">🚪</span> Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">
+          <span class="icon">📜</span> Prediction History
+        </h1>
+        <p class="page-subtitle">Track prediction accuracy over time</p>
+      </div>
+
+      <!-- Alert Container -->
+      <div id="alert-container"></div>
+
+      <!-- Symbol Selection -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <span class="icon">💹</span> Select Stock
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <input 
+              type="text" 
+              id="symbol-input" 
+              class="form-input" 
+              placeholder="Enter stock symbol (e.g., AAPL)"
+            >
+          </div>
+          <button class="btn btn-primary" id="load-btn">
+            <span class="icon">📥</span> Load History
+          </button>
+        </div>
+      </div>
+
+      <!-- History Results -->
+      <div id="history-container" class="hidden">
+        <!-- Accuracy Stats -->
+        <div class="grid grid-3 mb-4">
+          <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-value" id="total-predictions">0</div>
+            <div class="stat-label">Total Predictions</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-value" id="accuracy-rate">-</div>
+            <div class="stat-label">Accuracy Rate</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📈</div>
+            <div class="stat-value" id="avg-error">-</div>
+            <div class="stat-label">Avg Error</div>
+          </div>
+        </div>
+
+        <!-- History Table -->
+        <div class="card">
+          <div class="card-header">
+            <span class="icon">📜</span> Prediction History
+            <span id="history-symbol" class="badge badge-primary" style="margin-left: auto;"></span>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Prediction Date</th>
+                    <th>Target Date</th>
+                    <th>Predicted Price</th>
+                    <th>Actual Price</th>
+                    <th>Trend</th>
+                    <th>Confidence</th>
+                    <th>Model</th>
+                  </tr>
+                </thead>
+                <tbody id="history-body">
+                  <tr>
+                    <td colspan="7" style="text-align: center;">
+                      <div class="spinner"></div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <span class="icon">⚡</span> Quick Actions
+        </div>
+        <div class="card-body">
+          <div class="flex gap-2" style="flex-wrap: wrap;">
+            <button class="btn btn-secondary" onclick="quickLoad('AAPL')">
+              <span class="icon">🍎</span> AAPL History
+            </button>
+            <button class="btn btn-secondary" onclick="quickLoad('MSFT')">
+              <span class="icon">🪟</span> MSFT History
+            </button>
+            <button class="btn btn-secondary" onclick="quickLoad('GOOGL')">
+              <span class="icon">🔍</span> GOOGL History
+            </button>
+            <button class="btn btn-secondary" onclick="quickLoad('TSLA')">
+              <span class="icon">⚡</span> TSLA History
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Stock Market Prediction System. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { api } from '../js/api.js';
+    import { AppState } from '../js/state.js';
+
+    if (!AppState.token) window.location.href = 'login.html';
+
+    const alertContainer = document.getElementById('alert-container');
+    const loadBtn = document.getElementById('load-btn');
+    const historyContainer = document.getElementById('history-container');
+
+    function showAlert(message, type = 'info') {
+      alertContainer.innerHTML = `
+        <div class="alert alert-${type}">
+          <span class="icon">${type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️'}</span>
+          ${message}
+        </div>
+      `;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+      e.preventDefault();
+      try { await api.auth.logout(); } catch (e) {}
+      AppState.setToken(null);
+      window.location.href = 'login.html';
+    });
+
+    // Load history
+    async function loadHistory(symbol) {
+      loadBtn.disabled = true;
+      loadBtn.innerHTML = '<span class="spinner" style="width: 20px; height: 20px;"></span> Loading...';
+      historyContainer.classList.add('hidden');
+
+      try {
+        const result = await api.predictions.history(symbol);
+        
+        if (!result.history || result.history.length === 0) {
+          showAlert(`No prediction history found for ${symbol}`, 'warning');
+          return;
+        }
+
+        document.getElementById('history-symbol').textContent = symbol;
+        document.getElementById('total-predictions').textContent = result.history.length;
+
+        // Calculate accuracy for predictions with actual prices
+        const withActual = result.history.filter(p => p.actual_price !== null);
+        if (withActual.length > 0) {
+          const errors = withActual.map(p => Math.abs(p.predicted_price - p.actual_price));
+          const avgError = errors.reduce((a, b) => a + b, 0) / errors.length;
+          const avgErrorPercent = withActual.reduce((sum, p) => 
+            sum + Math.abs((p.predicted_price - p.actual_price) / p.actual_price * 100), 0
+          ) / withActual.length;
+          
+          document.getElementById('accuracy-rate').textContent = `${(100 - avgErrorPercent).toFixed(1)}%`;
+          document.getElementById('avg-error').textContent = `$${avgError.toFixed(2)}`;
+        } else {
+          document.getElementById('accuracy-rate').textContent = 'N/A';
+          document.getElementById('avg-error').textContent = 'N/A';
+        }
+
+        // Populate table
+        const tbody = document.getElementById('history-body');
+        tbody.innerHTML = result.history.map(pred => {
+          const trendIcon = pred.trend_direction === 'up' ? '📈' : '📉';
+          const actualPrice = pred.actual_price ? `$${pred.actual_price.toFixed(2)}` : '-';
+          const confidence = `${(pred.confidence_score * 100).toFixed(0)}%`;
+          
+          return `
+            <tr>
+              <td>${pred.prediction_date}</td>
+              <td>${pred.target_date}</td>
+              <td>$${pred.predicted_price.toFixed(2)}</td>
+              <td>${actualPrice}</td>
+              <td>${trendIcon} ${pred.trend_direction}</td>
+              <td>${confidence}</td>
+              <td><span class="badge badge-primary">${pred.model_source}</span></td>
+            </tr>
+          `;
+        }).join('');
+
+        historyContainer.classList.remove('hidden');
+        showAlert(`Loaded ${result.history.length} predictions for ${symbol}`, 'success');
+
+      } catch (error) {
+        showAlert(error.message || 'Failed to load history', 'danger');
+      } finally {
+        loadBtn.disabled = false;
+        loadBtn.innerHTML = '<span class="icon">📥</span> Load History';
+      }
+    }
+
+    loadBtn.addEventListener('click', () => {
+      const symbol = document.getElementById('symbol-input').value.trim().toUpperCase();
+      if (!symbol) {
+        showAlert('Please enter a stock symbol', 'warning');
+        return;
+      }
+      loadHistory(symbol);
+    });
+
+    window.quickLoad = (symbol) => {
+      document.getElementById('symbol-input').value = symbol;
+      loadHistory(symbol);
+    };
+  </script>
+</body>
+</html>

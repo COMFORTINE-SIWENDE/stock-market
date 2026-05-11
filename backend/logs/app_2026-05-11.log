@@ -1,0 +1,83 @@
+2026-05-11 18:24:37 | INFO     | __main__:<module>:310 - Starting server on http://0.0.0.0:8000
+2026-05-11 18:29:28 | ERROR    | __main__:get_predictions:207 - get_predictions error: Symbol AAPL not found
+2026-05-11 18:34:36 | ERROR    | __main__:get_predictions:207 - get_predictions error: Symbol AAPL not found
+2026-05-11 18:34:50 | WARNING  | app.services.sentiment_service:analyze_pending_articles:18 - Symbol AAPL not found in DB
+2026-05-11 18:34:50 | WARNING  | app.services.sentiment_service:aggregate_daily_sentiment:49 - Symbol AAPL not found
+2026-05-11 18:35:43 | ERROR    | __main__:get_predictions:207 - get_predictions error: Symbol AAPL not found
+2026-05-11 18:35:47 | ERROR    | __main__:get_predictions:207 - get_predictions error: Symbol AAPL not found
+2026-05-11 18:37:14 | INFO     | app.services.data_service:collect_stock_data:31 - Collecting stock data for AAPL from 2026-04-11 to 2026-05-11
+2026-05-11 18:37:26 | INFO     | app.services.data_service:collect_stock_data:69 - Inserted 20 new stock records for AAPL
+2026-05-11 18:37:26 | INFO     | app.services.data_service:collect_news:80 - Collecting news for AAPL (last 24h)
+2026-05-11 18:37:26 | WARNING  | app.tools.data_tools:fetch_news_articles:91 - NEWS_API_KEY not configured, skipping NewsAPI fetch
+2026-05-11 18:37:27 | INFO     | app.services.data_service:collect_news:115 - Inserted 0 new articles for AAPL
+2026-05-11 18:40:09 | ERROR    | app.tools.prediction_tools:load_model_artifacts:117 - Failed to load model artifacts for AAPL: Error when deserializing class 'InputLayer' using config={'batch_shape': [None, 60, 9], 'dtype': 'float32', 'sparse': False, 'ragged': False, 'name': 'input_layer_1', 'optional': False}.
+
+Exception encountered: Unrecognized keyword arguments: ['batch_shape', 'optional']
+2026-05-11 18:40:09 | INFO     | app.tools.prediction_tools:predict_price:186 - No model for AAPL, training on demand...
+2026-05-11 18:40:17 | INFO     | app.services.prediction_service:train_model:21 - Training model for AAPL
+2026-05-11 18:40:17 | ERROR    | __main__:get_predictions:207 - get_predictions error: Insufficient data for AAPL: need at least 80 rows, got 20
+2026-05-11 18:40:23 | ERROR    | app.tools.prediction_tools:load_model_artifacts:117 - Failed to load model artifacts for AAPL: Error when deserializing class 'InputLayer' using config={'batch_shape': [None, 60, 9], 'dtype': 'float32', 'sparse': False, 'ragged': False, 'name': 'input_layer_1', 'optional': False}.
+
+Exception encountered: Unrecognized keyword arguments: ['batch_shape', 'optional']
+2026-05-11 18:40:23 | INFO     | app.tools.prediction_tools:predict_price:186 - No model for AAPL, training on demand...
+2026-05-11 18:40:23 | INFO     | app.services.prediction_service:train_model:21 - Training model for AAPL
+2026-05-11 18:40:24 | ERROR    | __main__:get_predictions:207 - get_predictions error: Insufficient data for AAPL: need at least 80 rows, got 20
+2026-05-11 18:41:23 | INFO     | app.services.data_service:collect_stock_data:31 - Collecting stock data for AAPL from 2025-05-11 to 2026-05-11
+2026-05-11 18:43:14 | INFO     | app.services.data_service:collect_stock_data:69 - Inserted 230 new stock records for AAPL
+2026-05-11 18:43:14 | INFO     | app.services.data_service:collect_news:80 - Collecting news for AAPL (last 24h)
+2026-05-11 18:43:15 | WARNING  | app.tools.data_tools:fetch_news_articles:91 - NEWS_API_KEY not configured, skipping NewsAPI fetch
+2026-05-11 18:43:15 | INFO     | app.services.data_service:collect_news:115 - Inserted 0 new articles for AAPL
+2026-05-11 18:43:15 | INFO     | app.services.data_service:collect_stock_data:31 - Collecting stock data for MSFT from 2025-05-11 to 2026-05-11
+2026-05-11 18:45:10 | INFO     | app.services.data_service:collect_stock_data:69 - Inserted 250 new stock records for MSFT
+2026-05-11 18:45:10 | INFO     | app.services.data_service:collect_news:80 - Collecting news for MSFT (last 24h)
+2026-05-11 18:45:11 | WARNING  | app.tools.data_tools:fetch_news_articles:91 - NEWS_API_KEY not configured, skipping NewsAPI fetch
+2026-05-11 18:45:11 | INFO     | app.services.data_service:collect_news:115 - Inserted 0 new articles for MSFT
+2026-05-11 18:45:11 | INFO     | app.services.data_service:collect_stock_data:31 - Collecting stock data for GOOGL from 2025-05-11 to 2026-05-11
+2026-05-11 18:47:12 | INFO     | app.services.data_service:collect_stock_data:69 - Inserted 250 new stock records for GOOGL
+2026-05-11 18:47:12 | INFO     | app.services.data_service:collect_news:80 - Collecting news for GOOGL (last 24h)
+2026-05-11 18:47:13 | WARNING  | app.tools.data_tools:fetch_news_articles:91 - NEWS_API_KEY not configured, skipping NewsAPI fetch
+2026-05-11 18:47:13 | INFO     | app.services.data_service:collect_news:115 - Inserted 0 new articles for GOOGL
+2026-05-11 18:47:15 | ERROR    | app.tools.prediction_tools:load_model_artifacts:117 - Failed to load model artifacts for AAPL: Error when deserializing class 'InputLayer' using config={'batch_shape': [None, 60, 9], 'dtype': 'float32', 'sparse': False, 'ragged': False, 'name': 'input_layer_1', 'optional': False}.
+
+Exception encountered: Unrecognized keyword arguments: ['batch_shape', 'optional']
+2026-05-11 18:47:15 | INFO     | app.tools.prediction_tools:predict_price:186 - No model for AAPL, training on demand...
+2026-05-11 18:47:15 | INFO     | app.services.prediction_service:train_model:21 - Training model for AAPL
+2026-05-11 18:47:28 | INFO     | app.tools.prediction_tools:save_model_artifacts:102 - Saved model artifacts for AAPL
+2026-05-11 18:47:28 | INFO     | app.services.prediction_service:train_model:50 - Model trained for AAPL: MSE=0.007421 MAE=0.069474
+2026-05-11 18:47:32 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 5 days for AAPL confidence=0.5 source=local
+2026-05-11 19:53:50 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 5 days for AAPL confidence=0.5 source=local
+2026-05-11 21:17:20 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 5 days for AAPL confidence=0.5 source=local
+2026-05-11 21:17:31 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 7 days for AAPL confidence=0.5 source=local
+2026-05-11 21:18:02 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 7 days for AAPL confidence=0.5 source=local
+2026-05-11 21:18:12 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 5 days for AAPL confidence=0.5 source=local
+2026-05-11 21:22:42 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 5 days for AAPL confidence=0.5 source=local
+2026-05-11 21:23:03 | INFO     | app.services.data_service:collect_stock_data:31 - Collecting stock data for TSLA from 2026-04-11 to 2026-05-11
+2026-05-11 21:23:18 | INFO     | app.services.data_service:collect_stock_data:69 - Inserted 20 new stock records for TSLA
+2026-05-11 21:23:18 | INFO     | app.services.data_service:collect_news:80 - Collecting news for TSLA (last 24h)
+2026-05-11 21:23:19 | WARNING  | app.tools.data_tools:fetch_news_articles:91 - NEWS_API_KEY not configured, skipping NewsAPI fetch
+2026-05-11 21:23:20 | INFO     | app.services.data_service:collect_news:115 - Inserted 0 new articles for TSLA
+2026-05-11 22:03:24 | INFO     | __main__:<module>:310 - Starting server on http://0.0.0.0:8000
+2026-05-11 22:06:00 | INFO     | app.services.data_service:collect_stock_data:31 - Collecting stock data for AAPL from 2026-01-31 to 2026-05-11
+2026-05-11 22:06:24 | INFO     | app.services.data_service:collect_stock_data:69 - Inserted 0 new stock records for AAPL
+2026-05-11 22:06:24 | INFO     | app.services.data_service:collect_news:80 - Collecting news for AAPL (last 24h)
+2026-05-11 22:06:26 | WARNING  | app.tools.data_tools:fetch_news_articles:91 - NEWS_API_KEY not configured, skipping NewsAPI fetch
+2026-05-11 22:06:26 | INFO     | app.services.data_service:collect_news:115 - Inserted 0 new articles for AAPL
+2026-05-11 22:06:26 | INFO     | app.services.data_service:collect_stock_data:31 - Collecting stock data for MSFTT from 2026-01-31 to 2026-05-11
+2026-05-11 22:06:39 | INFO     | app.services.data_service:collect_stock_data:69 - Inserted 0 new stock records for MSFTT
+2026-05-11 22:06:39 | INFO     | app.services.data_service:collect_news:80 - Collecting news for MSFTT (last 24h)
+2026-05-11 22:06:39 | WARNING  | app.tools.data_tools:fetch_news_articles:91 - NEWS_API_KEY not configured, skipping NewsAPI fetch
+2026-05-11 22:06:40 | INFO     | app.services.data_service:collect_news:115 - Inserted 0 new articles for MSFTT
+2026-05-11 22:06:40 | INFO     | app.services.data_service:collect_stock_data:31 - Collecting stock data for GOOGL from 2026-01-31 to 2026-05-11
+2026-05-11 22:07:02 | INFO     | app.services.data_service:collect_stock_data:69 - Inserted 0 new stock records for GOOGL
+2026-05-11 22:07:02 | INFO     | app.services.data_service:collect_news:80 - Collecting news for GOOGL (last 24h)
+2026-05-11 22:07:03 | WARNING  | app.tools.data_tools:fetch_news_articles:91 - NEWS_API_KEY not configured, skipping NewsAPI fetch
+2026-05-11 22:07:03 | INFO     | app.services.data_service:collect_news:115 - Inserted 0 new articles for GOOGL
+2026-05-11 22:08:58 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 5 days for AAPL confidence=0.5 source=local
+2026-05-11 22:20:52 | INFO     | __main__:<module>:334 - Starting server on http://0.0.0.0:8000
+2026-05-11 22:28:21 | ERROR    | app.agent.agent:classify_intent:56 - classify_intent failed: upstream connect error or disconnect/reset before headers. reset reason: connection timeout
+2026-05-11 22:31:50 | INFO     | __main__:<module>:334 - Starting server on http://0.0.0.0:8000
+2026-05-11 22:34:43 | INFO     | app.tools.prediction_tools:predict_price:186 - No model for MSFT, training on demand...
+2026-05-11 22:34:43 | INFO     | app.services.prediction_service:train_model:21 - Training model for MSFT
+2026-05-11 22:35:05 | INFO     | app.tools.prediction_tools:save_model_artifacts:102 - Saved model artifacts for MSFT
+2026-05-11 22:35:05 | INFO     | app.services.prediction_service:train_model:50 - Model trained for MSFT: MSE=0.014277 MAE=0.108265
+2026-05-11 22:35:09 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 1 days for MSFT confidence=0.5 source=local

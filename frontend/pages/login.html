@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Stock Predictor</title>
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <a href="../index.html" class="nav-brand">
+        <span class="icon">📈</span>
+        Stock Predictor
+      </a>
+      <ul class="nav-links">
+        <li><a href="../index.html"><span class="icon">🏠</span> Home</a></li>
+        <li><a href="login.html" class="active"><span class="icon">🔐</span> Login</a></li>
+        <li><a href="register.html"><span class="icon">✨</span> Register</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="main-content">
+      <div style="max-width: 500px; margin: 0 auto;">
+        <div class="page-header text-center">
+          <h1 class="page-title" style="justify-content: center;">
+            <span class="icon">🔐</span> Login
+          </h1>
+          <p class="page-subtitle">Welcome back! Login to your account</p>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="alert-container"></div>
+
+        <!-- Login Form -->
+        <div class="card">
+          <form id="login-form">
+            <div class="form-group">
+              <label class="form-label" for="username">
+                <span class="icon">👤</span> Username or Email
+              </label>
+              <input 
+                type="text" 
+                id="username" 
+                class="form-input" 
+                placeholder="Enter your username or email"
+                required
+              >
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="password">
+                <span class="icon">🔒</span> Password
+              </label>
+              <input 
+                type="password" 
+                id="password" 
+                class="form-input" 
+                placeholder="Enter your password"
+                required
+              >
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;" id="login-btn">
+              <span class="icon">🚀</span> Login
+            </button>
+          </form>
+
+          <div class="card-footer text-center">
+            <p>Don't have an account? <a href="register.html" style="color: var(--button-primary); font-weight: 500;">Register here</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Stock Market Prediction System. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { api } from '../js/api.js';
+    import { AppState } from '../js/state.js';
+
+    const form = document.getElementById('login-form');
+    const alertContainer = document.getElementById('alert-container');
+    const loginBtn = document.getElementById('login-btn');
+
+    function showAlert(message, type = 'danger') {
+      alertContainer.innerHTML = `
+        <div class="alert alert-${type}">
+          <span class="icon">${type === 'success' ? '✅' : '❌'}</span>
+          ${message}
+        </div>
+      `;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!username || !password) {
+        showAlert('Please fill in all fields');
+        return;
+      }
+
+      loginBtn.disabled = true;
+      loginBtn.innerHTML = '<span class="spinner" style="width: 20px; height: 20px; margin: 0;"></span> Logging in...';
+
+      try {
+        const response = await api.auth.login({
+          username_or_email: username,
+          password: password
+        });
+
+        AppState.setToken(response.token);
+        AppState.setUser({ username: username });
+
+        showAlert('Login successful! Redirecting...', 'success');
+        
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 1000);
+
+      } catch (error) {
+        showAlert(error.message || 'Login failed. Please check your credentials.');
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = '<span class="icon">🚀</span> Login';
+      }
+    });
+  </script>
+</body>
+</html>

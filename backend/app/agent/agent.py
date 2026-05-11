@@ -42,6 +42,7 @@ class Agent:
                     {"role": "user", "content": query},
                 ],
                 max_completion_tokens=512,
+                timeout=10.0,  # Add 10 second timeout
             )
             content = response.choices[0].message.content.strip()
             if content.startswith("```"):
@@ -54,7 +55,53 @@ class Agent:
             return {"intent_type": "general_question", "entities": {}, "response": "Could you clarify your question?"}
         except Exception as e:
             logger.error(f"classify_intent failed: {e}")
+            # Check if it's a connection/timeout error - use fallback
+            error_msg = str(e).lower()
+            if "timeout" in error_msg or "connection" in error_msg:
+                logger.info("Using fallback keyword-based intent classification")
+                return self._fallback_classify(query)
             return {"intent_type": "general_question", "entities": {}, "response": "I encountered an error. Please try again."}
+
+    def _fallback_classify(self, query: str) -> dict:
+        """Fallback keyword-based classification when Azure OpenAI is unavailable."""
+        query_lower = query.lower()
+        
+        # Extract potential stock symbols (uppercase words 1-5 chars)
+        import re
+        symbols = re.findall(r'\b[A-Z]{1,5}\b', query)
+        symbol = symbols[0] if symbols else None
+        
+        # Keyword matching for intent
+        if any(word in query_lower for word in ['predict', 'prediction', 'forecast', 'future', 'tomorrow']):
+            return {
+                "intent_type": "get_prediction",
+                "entities": {"symbol": symbol, "horizon_days": 5},
+                "response": f"Let me get the prediction for {symbol}..." if symbol else "Please specify a stock symbol."
+            }
+        elif any(word in query_lower for word in ['sentiment', 'news', 'feeling', 'opinion']):
+            return {
+                "intent_type": "analyze_sentiment",
+                "entities": {"symbol": symbol},
+                "response": f"Analyzing sentiment for {symbol}..." if symbol else "Please specify a stock symbol."
+            }
+        elif any(word in query_lower for word in ['price', 'cost', 'worth', 'value', 'current']):
+            return {
+                "intent_type": "view_stock_data",
+                "entities": {"symbol": symbol},
+                "response": f"Getting current price for {symbol}..." if symbol else "Please specify a stock symbol."
+            }
+        elif any(word in query_lower for word in ['compare', 'versus', 'vs', 'difference']):
+            return {
+                "intent_type": "compare_stocks",
+                "entities": {"symbols": symbols if len(symbols) > 1 else []},
+                "response": f"Comparing {', '.join(symbols)}..." if len(symbols) > 1 else "Please specify multiple stock symbols to compare."
+            }
+        else:
+            return {
+                "intent_type": "general_question",
+                "entities": {},
+                "response": "I can help you with stock prices, predictions, and sentiment analysis. Try asking: 'What is the price of AAPL?' or 'Predict MSFT for 5 days'"
+            }
 
     def run(self, query: str, session: Session) -> str:
         """Classify intent, execute tools, return natural language response."""

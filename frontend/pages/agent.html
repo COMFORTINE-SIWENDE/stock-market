@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Agent - Stock Predictor</title>
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <a href="dashboard.html" class="nav-brand">
+        <span class="icon">📈</span>
+        Stock Predictor
+      </a>
+      <ul class="nav-links">
+        <li><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></li>
+        <li><a href="stocks.html"><span class="icon">💹</span> Stocks</a></li>
+        <li><a href="predictions.html"><span class="icon">🔮</span> Predictions</a></li>
+        <li><a href="sentiment.html"><span class="icon">📰</span> Sentiment</a></li>
+        <li><a href="history.html"><span class="icon">📜</span> History</a></li>
+        <li><a href="agent.html" class="active"><span class="icon">🤖</span> AI Agent</a></li>
+        <li><a href="profile.html"><span class="icon">👤</span> Profile</a></li>
+        <li><a href="#" id="logout-btn"><span class="icon">🚪</span> Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">
+          <span class="icon">🤖</span> AI Agent
+        </h1>
+        <p class="page-subtitle">Ask questions about stocks, predictions, and market analysis</p>
+      </div>
+
+      <!-- Alert Container -->
+      <div id="alert-container"></div>
+
+      <!-- Chat Container -->
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">💬</span> Chat with AI Agent
+        </div>
+        <div class="card-body">
+          <!-- Chat Messages -->
+          <div id="chat-messages" style="min-height: 400px; max-height: 500px; overflow-y: auto; margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+            <div class="chat-message agent-message">
+              <div class="message-header">
+                <span class="icon">🤖</span>
+                <strong>AI Agent</strong>
+              </div>
+              <div class="message-content">
+                Hello! I'm your AI stock market assistant. I can help you with:
+                <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                  <li>Stock price information and analysis</li>
+                  <li>Predictions and forecasts</li>
+                  <li>Sentiment analysis insights</li>
+                  <li>Technical indicators</li>
+                  <li>General market questions</li>
+                </ul>
+                What would you like to know?
+              </div>
+            </div>
+          </div>
+
+          <!-- Input Form -->
+          <form id="chat-form">
+            <div class="flex gap-2">
+              <input
+                type="text"
+                id="query-input"
+                class="input"
+                placeholder="Ask me anything about stocks..."
+                required
+                style="flex: 1;"
+              />
+              <button type="submit" class="btn btn-primary" id="send-btn">
+                <span class="icon">📤</span> Send
+              </button>
+            </div>
+          </form>
+
+          <!-- Quick Questions -->
+          <div style="margin-top: 1.5rem;">
+            <strong style="display: block; margin-bottom: 0.75rem;">Quick Questions:</strong>
+            <div class="flex gap-2" style="flex-wrap: wrap;">
+              <button class="btn btn-secondary quick-question" data-question="What is the current price of AAPL?">
+                💰 AAPL Price
+              </button>
+              <button class="btn btn-secondary quick-question" data-question="Give me a prediction for MSFT">
+                🔮 MSFT Prediction
+              </button>
+              <button class="btn btn-secondary quick-question" data-question="What is the sentiment for GOOGL?">
+                📰 GOOGL Sentiment
+              </button>
+              <button class="btn btn-secondary quick-question" data-question="Show me technical indicators for TSLA">
+                📊 TSLA Indicators
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Card -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <span class="icon">ℹ️</span> About the AI Agent
+        </div>
+        <div class="card-body">
+          <p style="margin-bottom: 1rem;">
+            The AI Agent is powered by Azure OpenAI and has access to real-time stock data, predictions, and sentiment analysis. It can:
+          </p>
+          <div class="grid grid-3">
+            <div>
+              <div class="stat-icon">📊</div>
+              <strong>Analyze Data</strong>
+              <p style="font-size: 0.875rem; opacity: 0.7; margin-top: 0.5rem;">
+                Access real-time stock prices and historical data
+              </p>
+            </div>
+            <div>
+              <div class="stat-icon">🔮</div>
+              <strong>Generate Insights</strong>
+              <p style="font-size: 0.875rem; opacity: 0.7; margin-top: 0.5rem;">
+                Provide predictions and trend analysis
+              </p>
+            </div>
+            <div>
+              <div class="stat-icon">💡</div>
+              <strong>Answer Questions</strong>
+              <p style="font-size: 0.875rem; opacity: 0.7; margin-top: 0.5rem;">
+                Explain market concepts and strategies
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Stock Market Prediction System. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <style>
+    .chat-message {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 8px;
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .agent-message {
+      background: white;
+      border-left: 4px solid #2baff7;
+    }
+
+    .user-message {
+      background: #e3f2fd;
+      border-left: 4px solid #1976d2;
+      margin-left: 2rem;
+    }
+
+    .message-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      opacity: 0.8;
+    }
+
+    .message-content {
+      line-height: 1.6;
+    }
+
+    .message-content ul {
+      margin: 0;
+    }
+
+    .quick-question {
+      font-size: 0.875rem;
+      padding: 0.5rem 1rem;
+    }
+
+    #chat-messages::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #chat-messages::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    #chat-messages::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+    }
+
+    #chat-messages::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+  </style>
+
+  <script type="module">
+    import { AppState } from '../js/state.js';
+    import { api } from '../js/api.js';
+
+    if (!AppState.token) window.location.href = 'login.html';
+
+    const chatMessages = document.getElementById('chat-messages');
+    const chatForm = document.getElementById('chat-form');
+    const queryInput = document.getElementById('query-input');
+    const sendBtn = document.getElementById('send-btn');
+    const alertContainer = document.getElementById('alert-container');
+
+    function showAlert(message, type = 'error') {
+      alertContainer.innerHTML = `
+        <div class="alert alert-${type}">
+          ${message}
+        </div>
+      `;
+      setTimeout(() => {
+        alertContainer.innerHTML = '';
+      }, 5000);
+    }
+
+    function addMessage(content, isUser = false) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `chat-message ${isUser ? 'user-message' : 'agent-message'}`;
+      messageDiv.innerHTML = `
+        <div class="message-header">
+          <span class="icon">${isUser ? '👤' : '🤖'}</span>
+          <strong>${isUser ? 'You' : 'AI Agent'}</strong>
+        </div>
+        <div class="message-content">${content}</div>
+      `;
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    async function sendQuery(query) {
+      if (!query.trim()) return;
+
+      // Add user message
+      addMessage(query, true);
+      queryInput.value = '';
+
+      // Disable input while processing
+      sendBtn.disabled = true;
+      sendBtn.innerHTML = '<span class="spinner"></span> Thinking...';
+
+      try {
+        const response = await api.agent.query(query);
+        addMessage(response.response);
+      } catch (error) {
+        console.error('Agent query error:', error);
+        addMessage('Sorry, I encountered an error processing your request. Please try again.', false);
+        showAlert(error.message || 'Failed to get response from AI agent');
+      } finally {
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = '<span class="icon">📤</span> Send';
+      }
+    }
+
+    // Form submit handler
+    chatForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const query = queryInput.value.trim();
+      if (query) {
+        sendQuery(query);
+      }
+    });
+
+    // Quick question handlers
+    document.querySelectorAll('.quick-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const question = btn.dataset.question;
+        queryInput.value = question;
+        sendQuery(question);
+      });
+    });
+
+    // Logout handler
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+      e.preventDefault();
+      try {
+        await api.auth.logout();
+      } catch (e) {}
+      AppState.setToken(null);
+      AppState.setUser(null);
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>

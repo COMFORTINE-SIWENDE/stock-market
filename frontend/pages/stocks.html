@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stocks - Stock Predictor</title>
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <a href="dashboard.html" class="nav-brand">
+        <span class="icon">📈</span>
+        Stock Predictor
+      </a>
+      <ul class="nav-links">
+        <li><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></li>
+        <li><a href="stocks.html" class="active"><span class="icon">💹</span> Stocks</a></li>
+        <li><a href="predictions.html"><span class="icon">🔮</span> Predictions</a></li>
+        <li><a href="sentiment.html"><span class="icon">📰</span> Sentiment</a></li>
+        <li><a href="history.html"><span class="icon">📜</span> History</a></li>
+        <li><a href="agent.html"><span class="icon">🤖</span> AI Agent</a></li>
+        <li><a href="profile.html"><span class="icon">👤</span> Profile</a></li>
+        <li><a href="#" id="logout-btn"><span class="icon">🚪</span> Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">
+          <span class="icon">💹</span> Stock Data
+        </h1>
+        <p class="page-subtitle">View and manage stock market data</p>
+      </div>
+
+      <!-- Alert Container -->
+      <div id="alert-container"></div>
+
+      <!-- Search & Actions -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="flex gap-2" style="flex-wrap: wrap; align-items: center;">
+            <div class="search-bar" style="flex: 1; min-width: 250px;">
+              <span class="search-icon">🔍</span>
+              <input 
+                type="text" 
+                id="search-input" 
+                class="search-input" 
+                placeholder="Search stocks (e.g., AAPL, MSFT)..."
+              >
+            </div>
+            <button class="btn btn-primary" id="collect-btn">
+              <span class="icon">📥</span> Collect Data
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stock Details -->
+      <div id="stock-details" class="hidden">
+        <div class="grid grid-2 mb-4">
+          <div class="card">
+            <div class="card-header">
+              <span class="icon">💰</span> Current Price
+            </div>
+            <div class="card-body text-center">
+              <div class="prediction-price" id="current-price">-</div>
+              <div class="prediction-date" id="symbol-name">-</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="icon">📊</span> Technical Indicators
+            </div>
+            <div class="card-body">
+              <div style="display: grid; gap: 0.5rem;">
+                <div class="flex justify-between">
+                  <span>SMA 5:</span>
+                  <strong id="sma-5">-</strong>
+                </div>
+                <div class="flex justify-between">
+                  <span>SMA 20:</span>
+                  <strong id="sma-20">-</strong>
+                </div>
+                <div class="flex justify-between">
+                  <span>Volatility:</span>
+                  <strong id="volatility">-</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Historical Data -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <span class="icon">📈</span> Historical Data
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table id="historical-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Open</th>
+                    <th>High</th>
+                    <th>Low</th>
+                    <th>Close</th>
+                    <th>Volume</th>
+                  </tr>
+                </thead>
+                <tbody id="historical-body">
+                  <tr>
+                    <td colspan="6" style="text-align: center;">
+                      <div class="spinner"></div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex gap-2">
+          <a href="#" id="predict-btn" class="btn btn-primary">
+            <span class="icon">🔮</span> Generate Prediction
+          </a>
+          <a href="#" id="sentiment-btn" class="btn btn-primary">
+            <span class="icon">📰</span> Analyze Sentiment
+          </a>
+        </div>
+      </div>
+
+      <!-- Popular Stocks -->
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">⭐</span> Popular Stocks
+        </div>
+        <div class="card-body">
+          <div class="grid grid-4" id="popular-stocks">
+            <button class="btn btn-secondary" onclick="searchStock('AAPL')">
+              <span class="icon">🍎</span> AAPL
+            </button>
+            <button class="btn btn-secondary" onclick="searchStock('MSFT')">
+              <span class="icon">🪟</span> MSFT
+            </button>
+            <button class="btn btn-secondary" onclick="searchStock('GOOGL')">
+              <span class="icon">🔍</span> GOOGL
+            </button>
+            <button class="btn btn-secondary" onclick="searchStock('TSLA')">
+              <span class="icon">⚡</span> TSLA
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Stock Market Prediction System. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { api } from '../js/api.js';
+    import { AppState } from '../js/state.js';
+
+    if (!AppState.token) window.location.href = 'login.html';
+
+    const alertContainer = document.getElementById('alert-container');
+    const searchInput = document.getElementById('search-input');
+    const stockDetails = document.getElementById('stock-details');
+    let currentSymbol = '';
+
+    function showAlert(message, type = 'info') {
+      alertContainer.innerHTML = `
+        <div class="alert alert-${type}">
+          <span class="icon">${type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️'}</span>
+          ${message}
+        </div>
+      `;
+      setTimeout(() => alertContainer.innerHTML = '', 5000);
+    }
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+      e.preventDefault();
+      try { await api.auth.logout(); } catch (e) {}
+      AppState.setToken(null);
+      window.location.href = 'login.html';
+    });
+
+    // Search stock
+    async function loadStock(symbol) {
+      currentSymbol = symbol.toUpperCase();
+      stockDetails.classList.remove('hidden');
+
+      try {
+        // Load price
+        const priceData = await api.stocks.price(currentSymbol);
+        document.getElementById('current-price').textContent = `$${priceData.price.toFixed(2)}`;
+        document.getElementById('symbol-name').textContent = currentSymbol;
+
+        // Load indicators
+        const today = new Date().toISOString().split('T')[0];
+        const sixtyDaysAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        const indicators = await api.stocks.indicators(currentSymbol, sixtyDaysAgo, today);
+        
+        document.getElementById('sma-5').textContent = `$${indicators.indicators.sma_5.toFixed(2)}`;
+        document.getElementById('sma-20').textContent = `$${indicators.indicators.sma_20.toFixed(2)}`;
+        document.getElementById('volatility').textContent = `${(indicators.indicators.volatility * 100).toFixed(2)}%`;
+
+        // Load historical data
+        const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        const historical = await api.stocks.data(currentSymbol, thirtyDaysAgo, today);
+        
+        const tbody = document.getElementById('historical-body');
+        tbody.innerHTML = historical.data.slice(0, 10).map(row => `
+          <tr>
+            <td>${row.date}</td>
+            <td>$${row.open.toFixed(2)}</td>
+            <td>$${row.high.toFixed(2)}</td>
+            <td>$${row.low.toFixed(2)}</td>
+            <td>$${row.close.toFixed(2)}</td>
+            <td>${(row.volume / 1000000).toFixed(2)}M</td>
+          </tr>
+        `).join('');
+
+        // Update action buttons
+        document.getElementById('predict-btn').href = `predictions.html?symbol=${currentSymbol}`;
+        document.getElementById('sentiment-btn').href = `sentiment.html?symbol=${currentSymbol}`;
+
+      } catch (error) {
+        showAlert(error.message || 'Failed to load stock data. Try collecting data first.', 'warning');
+        stockDetails.classList.add('hidden');
+      }
+    }
+
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && searchInput.value.trim()) {
+        loadStock(searchInput.value.trim());
+      }
+    });
+
+    window.searchStock = loadStock;
+
+    // Collect data
+    document.getElementById('collect-btn').addEventListener('click', async () => {
+      const symbol = prompt('Enter stock symbol (e.g., AAPL):');
+      if (!symbol) return;
+
+      const btn = document.getElementById('collect-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner" style="width: 20px; height: 20px;"></span> Collecting...';
+
+      try {
+        await api.stocks.collect([symbol.toUpperCase()], 365);
+        showAlert(`Data collected for ${symbol.toUpperCase()}!`, 'success');
+        loadStock(symbol);
+      } catch (error) {
+        showAlert(error.message || 'Failed to collect data', 'danger');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="icon">📥</span> Collect Data';
+      }
+    });
+  </script>
+</body>
+</html>

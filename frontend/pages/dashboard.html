@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Stock Predictor</title>
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <a href="dashboard.html" class="nav-brand">
+        <span class="icon">📈</span>
+        Stock Predictor
+      </a>
+      <ul class="nav-links">
+        <li><a href="dashboard.html" class="active"><span class="icon">📊</span> Dashboard</a></li>
+        <li><a href="stocks.html"><span class="icon">💹</span> Stocks</a></li>
+        <li><a href="predictions.html"><span class="icon">🔮</span> Predictions</a></li>
+        <li><a href="sentiment.html"><span class="icon">📰</span> Sentiment</a></li>
+        <li><a href="history.html"><span class="icon">📜</span> History</a></li>
+        <li><a href="agent.html"><span class="icon">🤖</span> AI Agent</a></li>
+        <li><a href="profile.html"><span class="icon">👤</span> Profile</a></li>
+        <li><a href="#" id="logout-btn"><span class="icon">🚪</span> Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">
+          <span class="icon">📊</span> Dashboard
+        </h1>
+        <p class="page-subtitle">Welcome back! Here's your market overview</p>
+      </div>
+
+      <!-- Alert Container -->
+      <div id="alert-container"></div>
+
+      <!-- Quick Stats -->
+      <div class="grid grid-4 mb-4">
+        <div class="stat-card">
+          <div class="stat-icon">💹</div>
+          <div class="stat-value" id="total-stocks">-</div>
+          <div class="stat-label">Stocks Tracked</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🔮</div>
+          <div class="stat-value" id="total-predictions">-</div>
+          <div class="stat-label">Predictions Made</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📈</div>
+          <div class="stat-value" id="avg-confidence">-</div>
+          <div class="stat-label">Avg Confidence</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⚡</div>
+          <div class="stat-value" id="system-status">✅</div>
+          <div class="stat-label">System Status</div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <span class="icon">⚡</span> Quick Actions
+        </div>
+        <div class="card-body">
+          <div class="flex gap-2" style="flex-wrap: wrap;">
+            <a href="stocks.html" class="btn btn-primary">
+              <span class="icon">💹</span> View Stocks
+            </a>
+            <a href="predictions.html" class="btn btn-primary">
+              <span class="icon">🔮</span> Generate Prediction
+            </a>
+            <a href="sentiment.html" class="btn btn-primary">
+              <span class="icon">📰</span> Analyze Sentiment
+            </a>
+            <button class="btn btn-secondary" id="collect-data-btn">
+              <span class="icon">📥</span> Collect Data
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Predictions -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <span class="icon">🔮</span> Recent Predictions
+        </div>
+        <div class="card-body">
+          <div id="recent-predictions">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Popular Stocks -->
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">⭐</span> Popular Stocks
+        </div>
+        <div class="card-body">
+          <div class="grid grid-3" id="popular-stocks">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Stock Market Prediction System. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Collect Data Modal -->
+  <div id="collect-modal" class="hidden" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+    <div class="card" style="max-width: 500px; width: 90%;">
+      <div class="card-header">
+        <span class="icon">📥</span> Collect Stock Data
+      </div>
+      <div class="card-body">
+        <form id="collect-form">
+          <div class="form-group">
+            <label class="form-label">Stock Symbols (comma-separated)</label>
+            <input type="text" id="symbols-input" class="form-input" placeholder="AAPL, MSFT, GOOGL" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Days of History</label>
+            <input type="number" id="days-input" class="form-input" value="365" min="1" max="3650">
+          </div>
+          <div class="flex gap-2">
+            <button type="submit" class="btn btn-primary" style="flex: 1;">
+              <span class="icon">📥</span> Collect
+            </button>
+            <button type="button" class="btn btn-secondary" id="cancel-collect">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { api } from '../js/api.js';
+    import { AppState } from '../js/state.js';
+
+    // Check authentication
+    if (!AppState.token) {
+      window.location.href = 'login.html';
+    }
+
+    const alertContainer = document.getElementById('alert-container');
+
+    function showAlert(message, type = 'info') {
+      alertContainer.innerHTML = `
+        <div class="alert alert-${type}">
+          <span class="icon">${type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️'}</span>
+          ${message}
+        </div>
+      `;
+      setTimeout(() => alertContainer.innerHTML = '', 5000);
+    }
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+      e.preventDefault();
+      try {
+        await api.auth.logout();
+      } catch (e) {}
+      AppState.setToken(null);
+      AppState.setUser(null);
+      window.location.href = 'login.html';
+    });
+
+    // Load dashboard data
+    async function loadDashboard() {
+      try {
+        // Load popular stocks
+        const popularSymbols = ['AAPL', 'MSFT', 'GOOGL', 'TSLA'];
+        const stocksContainer = document.getElementById('popular-stocks');
+        stocksContainer.innerHTML = '';
+
+        for (const symbol of popularSymbols) {
+          try {
+            const priceData = await api.stocks.price(symbol);
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+              <div class="card-header">${symbol}</div>
+              <div class="card-body">
+                <div class="prediction-price">$${priceData.price.toFixed(2)}</div>
+                <a href="predictions.html?symbol=${symbol}" class="btn btn-primary btn-sm mt-2" style="width: 100%;">
+                  <span class="icon">🔮</span> Predict
+                </a>
+              </div>
+            `;
+            stocksContainer.appendChild(card);
+          } catch (e) {
+            console.error(`Failed to load ${symbol}:`, e);
+          }
+        }
+
+        // Update stats
+        document.getElementById('total-stocks').textContent = popularSymbols.length;
+        document.getElementById('system-status').textContent = '✅';
+
+      } catch (error) {
+        console.error('Dashboard load error:', error);
+        showAlert('Failed to load dashboard data', 'warning');
+      }
+    }
+
+    // Collect data modal
+    const collectModal = document.getElementById('collect-modal');
+    const collectBtn = document.getElementById('collect-data-btn');
+    const cancelBtn = document.getElementById('cancel-collect');
+    const collectForm = document.getElementById('collect-form');
+
+    collectBtn.addEventListener('click', () => {
+      collectModal.classList.remove('hidden');
+      collectModal.style.display = 'flex';
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      collectModal.classList.add('hidden');
+      collectModal.style.display = 'none';
+    });
+
+    collectForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const symbols = document.getElementById('symbols-input').value.split(',').map(s => s.trim().toUpperCase());
+      const days = parseInt(document.getElementById('days-input').value);
+
+      collectBtn.disabled = true;
+      collectBtn.innerHTML = '<span class="spinner" style="width: 20px; height: 20px;"></span> Collecting...';
+
+      try {
+        const result = await api.stocks.collect(symbols, days);
+        showAlert(`Data collected successfully for ${symbols.join(', ')}!`, 'success');
+        collectModal.classList.add('hidden');
+        collectModal.style.display = 'none';
+        loadDashboard();
+      } catch (error) {
+        showAlert(error.message || 'Failed to collect data', 'danger');
+      } finally {
+        collectBtn.disabled = false;
+        collectBtn.innerHTML = '<span class="icon">📥</span> Collect Data';
+      }
+    });
+
+    // Load recent predictions
+    document.getElementById('recent-predictions').innerHTML = `
+      <p style="text-align: center; opacity: 0.7;">
+        <span class="icon">📊</span> Generate predictions to see them here
+      </p>
+    `;
+
+    document.getElementById('total-predictions').textContent = '0';
+    document.getElementById('avg-confidence').textContent = '-';
+
+    loadDashboard();
+  </script>
+</body>
+</html>

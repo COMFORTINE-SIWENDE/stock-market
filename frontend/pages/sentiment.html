@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentiment Analysis - Stock Predictor</title>
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <a href="dashboard.html" class="nav-brand">
+        <span class="icon">📈</span>
+        Stock Predictor
+      </a>
+      <ul class="nav-links">
+        <li><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></li>
+        <li><a href="stocks.html"><span class="icon">💹</span> Stocks</a></li>
+        <li><a href="predictions.html"><span class="icon">🔮</span> Predictions</a></li>
+        <li><a href="sentiment.html" class="active"><span class="icon">📰</span> Sentiment</a></li>
+        <li><a href="history.html"><span class="icon">📜</span> History</a></li>
+        <li><a href="agent.html"><span class="icon">🤖</span> AI Agent</a></li>
+        <li><a href="profile.html"><span class="icon">👤</span> Profile</a></li>
+        <li><a href="#" id="logout-btn"><span class="icon">🚪</span> Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">
+          <span class="icon">📰</span> Sentiment Analysis
+        </h1>
+        <p class="page-subtitle">Analyze news sentiment for market insights</p>
+      </div>
+
+      <!-- Alert Container -->
+      <div id="alert-container"></div>
+
+      <!-- Analysis Form -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <span class="icon">⚙️</span> Analyze Sentiment
+        </div>
+        <div class="card-body">
+          <form id="sentiment-form">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="icon">💹</span> Stock Symbol
+              </label>
+              <input 
+                type="text" 
+                id="symbol-input" 
+                class="form-input" 
+                placeholder="e.g., AAPL"
+                required
+              >
+            </div>
+            <button type="submit" class="btn btn-primary" id="analyze-btn">
+              <span class="icon">🚀</span> Analyze Sentiment
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Sentiment Results -->
+      <div id="sentiment-container" class="hidden">
+        <!-- Current Sentiment -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <span class="icon">📊</span> Current Sentiment
+            <span id="sentiment-symbol" class="badge badge-primary" style="margin-left: auto;"></span>
+          </div>
+          <div class="card-body">
+            <div class="grid grid-3">
+              <div class="stat-card">
+                <div class="stat-icon" id="sentiment-icon">😐</div>
+                <div class="stat-value" id="sentiment-score">0.00</div>
+                <div class="stat-label">Sentiment Score</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">📰</div>
+                <div class="stat-value" id="article-count">0</div>
+                <div class="stat-label">Articles Analyzed</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-value" id="positive-count">0</div>
+                <div class="stat-label">Positive Articles</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sentiment Breakdown -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <span class="icon">📊</span> Sentiment Breakdown
+          </div>
+          <div class="card-body">
+            <div class="grid grid-3">
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span>Positive</span>
+                  <strong id="positive-percent">0%</strong>
+                </div>
+                <div style="background: #e5e7eb; border-radius: 9999px; height: 8px; overflow: hidden;">
+                  <div id="positive-bar" style="background: var(--success); height: 100%; width: 0%; transition: width 0.3s;"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span>Neutral</span>
+                  <strong id="neutral-percent">0%</strong>
+                </div>
+                <div style="background: #e5e7eb; border-radius: 9999px; height: 8px; overflow: hidden;">
+                  <div id="neutral-bar" style="background: #6b7280; height: 100%; width: 0%; transition: width 0.3s;"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span>Negative</span>
+                  <strong id="negative-percent">0%</strong>
+                </div>
+                <div style="background: #e5e7eb; border-radius: 9999px; height: 8px; overflow: hidden;">
+                  <div id="negative-bar" style="background: var(--danger); height: 100%; width: 0%; transition: width 0.3s;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interpretation -->
+        <div class="card">
+          <div class="card-header">
+            <span class="icon">💡</span> Interpretation
+          </div>
+          <div class="card-body">
+            <p id="interpretation-text">-</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <span class="icon">⚡</span> Quick Actions
+        </div>
+        <div class="card-body">
+          <div class="flex gap-2" style="flex-wrap: wrap;">
+            <button class="btn btn-secondary" onclick="quickAnalyze('AAPL')">
+              <span class="icon">🍎</span> Analyze AAPL
+            </button>
+            <button class="btn btn-secondary" onclick="quickAnalyze('MSFT')">
+              <span class="icon">🪟</span> Analyze MSFT
+            </button>
+            <button class="btn btn-secondary" onclick="quickAnalyze('GOOGL')">
+              <span class="icon">🔍</span> Analyze GOOGL
+            </button>
+            <button class="btn btn-secondary" onclick="quickAnalyze('TSLA')">
+              <span class="icon">⚡</span> Analyze TSLA
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Stock Market Prediction System. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { api } from '../js/api.js';
+    import { AppState } from '../js/state.js';
+
+    if (!AppState.token) window.location.href = 'login.html';
+
+    const alertContainer = document.getElementById('alert-container');
+    const form = document.getElementById('sentiment-form');
+    const analyzeBtn = document.getElementById('analyze-btn');
+    const sentimentContainer = document.getElementById('sentiment-container');
+
+    function showAlert(message, type = 'info') {
+      alertContainer.innerHTML = `
+        <div class="alert alert-${type}">
+          <span class="icon">${type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️'}</span>
+          ${message}
+        </div>
+      `;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+      e.preventDefault();
+      try { await api.auth.logout(); } catch (e) {}
+      AppState.setToken(null);
+      window.location.href = 'login.html';
+    });
+
+    // Analyze sentiment
+    async function analyzeSentiment(symbol) {
+      analyzeBtn.disabled = true;
+      analyzeBtn.innerHTML = '<span class="spinner" style="width: 20px; height: 20px;"></span> Analyzing...';
+      sentimentContainer.classList.add('hidden');
+
+      try {
+        const result = await api.sentiment.analyze(symbol);
+        
+        document.getElementById('sentiment-symbol').textContent = symbol;
+        document.getElementById('article-count').textContent = result.articles_analyzed;
+
+        if (result.daily_sentiment) {
+          const sentiment = result.daily_sentiment;
+          const score = sentiment.avg_sentiment_score;
+          const total = sentiment.article_count;
+          const positive = sentiment.positive_count;
+          const neutral = sentiment.neutral_count;
+          const negative = sentiment.negative_count;
+
+          // Update score and icon
+          document.getElementById('sentiment-score').textContent = score.toFixed(3);
+          const icon = score > 0.1 ? '😊' : score < -0.1 ? '😟' : '😐';
+          document.getElementById('sentiment-icon').textContent = icon;
+
+          // Update counts
+          document.getElementById('positive-count').textContent = positive;
+
+          // Update percentages and bars
+          const posPercent = total > 0 ? (positive / total * 100).toFixed(0) : 0;
+          const neuPercent = total > 0 ? (neutral / total * 100).toFixed(0) : 0;
+          const negPercent = total > 0 ? (negative / total * 100).toFixed(0) : 0;
+
+          document.getElementById('positive-percent').textContent = `${posPercent}%`;
+          document.getElementById('neutral-percent').textContent = `${neuPercent}%`;
+          document.getElementById('negative-percent').textContent = `${negPercent}%`;
+
+          document.getElementById('positive-bar').style.width = `${posPercent}%`;
+          document.getElementById('neutral-bar').style.width = `${neuPercent}%`;
+          document.getElementById('negative-bar').style.width = `${negPercent}%`;
+
+          // Interpretation
+          let interpretation = '';
+          if (score > 0.2) {
+            interpretation = `<strong>Very Positive:</strong> News sentiment for ${symbol} is strongly positive. This suggests favorable market conditions and positive investor outlook.`;
+          } else if (score > 0.05) {
+            interpretation = `<strong>Positive:</strong> News sentiment for ${symbol} is moderately positive. Market perception appears favorable.`;
+          } else if (score > -0.05) {
+            interpretation = `<strong>Neutral:</strong> News sentiment for ${symbol} is neutral. No strong positive or negative bias detected.`;
+          } else if (score > -0.2) {
+            interpretation = `<strong>Negative:</strong> News sentiment for ${symbol} is moderately negative. Some concerns in market perception.`;
+          } else {
+            interpretation = `<strong>Very Negative:</strong> News sentiment for ${symbol} is strongly negative. Significant concerns in market perception.`;
+          }
+
+          document.getElementById('interpretation-text').innerHTML = interpretation;
+          sentimentContainer.classList.remove('hidden');
+          showAlert(`Sentiment analysis complete for ${symbol}!`, 'success');
+
+        } else {
+          showAlert(`No sentiment data available for ${symbol}. ${result.articles_analyzed} articles were analyzed but no daily sentiment was generated.`, 'warning');
+        }
+
+      } catch (error) {
+        showAlert(error.message || 'Failed to analyze sentiment', 'danger');
+      } finally {
+        analyzeBtn.disabled = false;
+        analyzeBtn.innerHTML = '<span class="icon">🚀</span> Analyze Sentiment';
+      }
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const symbol = document.getElementById('symbol-input').value.trim().toUpperCase();
+      if (!symbol) {
+        showAlert('Please enter a stock symbol', 'warning');
+        return;
+      }
+      analyzeSentiment(symbol);
+    });
+
+    window.quickAnalyze = (symbol) => {
+      document.getElementById('symbol-input').value = symbol;
+      analyzeSentiment(symbol);
+    };
+
+    // Check for symbol in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const symbolParam = urlParams.get('symbol');
+    if (symbolParam) {
+      document.getElementById('symbol-input').value = symbolParam;
+      analyzeSentiment(symbolParam);
+    }
+  </script>
+</body>
+</html>

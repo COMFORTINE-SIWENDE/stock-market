@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Predictions - Stock Predictor</title>
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <a href="dashboard.html" class="nav-brand">
+        <span class="icon">📈</span>
+        Stock Predictor
+      </a>
+      <ul class="nav-links">
+        <li><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></li>
+        <li><a href="stocks.html"><span class="icon">💹</span> Stocks</a></li>
+        <li><a href="predictions.html" class="active"><span class="icon">🔮</span> Predictions</a></li>
+        <li><a href="sentiment.html"><span class="icon">📰</span> Sentiment</a></li>
+        <li><a href="history.html"><span class="icon">📜</span> History</a></li>
+        <li><a href="agent.html"><span class="icon">🤖</span> AI Agent</a></li>
+        <li><a href="profile.html"><span class="icon">👤</span> Profile</a></li>
+        <li><a href="#" id="logout-btn"><span class="icon">🚪</span> Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">
+          <span class="icon">🔮</span> Price Predictions
+        </h1>
+        <p class="page-subtitle">AI-powered stock price forecasting</p>
+      </div>
+
+      <!-- Alert Container -->
+      <div id="alert-container"></div>
+
+      <!-- Prediction Form -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <span class="icon">⚙️</span> Generate Prediction
+        </div>
+        <div class="card-body">
+          <form id="prediction-form">
+            <div class="grid grid-2">
+              <div class="form-group">
+                <label class="form-label">
+                  <span class="icon">💹</span> Stock Symbol
+                </label>
+                <input 
+                  type="text" 
+                  id="symbol-input" 
+                  class="form-input" 
+                  placeholder="e.g., AAPL"
+                  required
+                >
+              </div>
+              <div class="form-group">
+                <label class="form-label">
+                  <span class="icon">📅</span> Forecast Days
+                </label>
+                <select id="days-input" class="form-select">
+                  <option value="1">1 Day</option>
+                  <option value="5" selected>5 Days</option>
+                  <option value="10">10 Days</option>
+                  <option value="30">30 Days</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" id="predict-btn">
+              <span class="icon">🚀</span> Generate Prediction
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Predictions Results -->
+      <div id="predictions-container" class="hidden">
+        <div class="card mb-4">
+          <div class="card-header">
+            <span class="icon">📊</span> Prediction Results
+            <span id="prediction-symbol" class="badge badge-primary" style="margin-left: auto;"></span>
+          </div>
+          <div class="card-body">
+            <div class="grid grid-3" id="predictions-grid">
+              <!-- Predictions will be inserted here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Model Info -->
+        <div class="card">
+          <div class="card-header">
+            <span class="icon">🤖</span> Model Information
+          </div>
+          <div class="card-body">
+            <div class="grid grid-3">
+              <div>
+                <strong>Model Source:</strong>
+                <div id="model-source" class="mt-1">-</div>
+              </div>
+              <div>
+                <strong>Average Confidence:</strong>
+                <div id="avg-confidence" class="mt-1">-</div>
+              </div>
+              <div>
+                <strong>Predictions Generated:</strong>
+                <div id="pred-count" class="mt-1">-</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <span class="icon">⚡</span> Quick Actions
+        </div>
+        <div class="card-body">
+          <div class="flex gap-2" style="flex-wrap: wrap;">
+            <button class="btn btn-secondary" onclick="quickPredict('AAPL')">
+              <span class="icon">🍎</span> Predict AAPL
+            </button>
+            <button class="btn btn-secondary" onclick="quickPredict('MSFT')">
+              <span class="icon">🪟</span> Predict MSFT
+            </button>
+            <button class="btn btn-secondary" onclick="quickPredict('GOOGL')">
+              <span class="icon">🔍</span> Predict GOOGL
+            </button>
+            <button class="btn btn-secondary" onclick="quickPredict('TSLA')">
+              <span class="icon">⚡</span> Predict TSLA
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Stock Market Prediction System. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { api } from '../js/api.js';
+    import { AppState } from '../js/state.js';
+
+    if (!AppState.token) window.location.href = 'login.html';
+
+    const alertContainer = document.getElementById('alert-container');
+    const form = document.getElementById('prediction-form');
+    const predictBtn = document.getElementById('predict-btn');
+    const predictionsContainer = document.getElementById('predictions-container');
+    const predictionsGrid = document.getElementById('predictions-grid');
+
+    function showAlert(message, type = 'info') {
+      alertContainer.innerHTML = `
+        <div class="alert alert-${type}">
+          <span class="icon">${type === 'success' ? '✅' : type === 'warning' ? '⚠️' : type === 'danger' ? '❌' : 'ℹ️'}</span>
+          ${message}
+        </div>
+      `;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+      e.preventDefault();
+      try { await api.auth.logout(); } catch (e) {}
+      AppState.setToken(null);
+      window.location.href = 'login.html';
+    });
+
+    // Generate prediction
+    async function generatePrediction(symbol, days) {
+      predictBtn.disabled = true;
+      predictBtn.innerHTML = '<span class="spinner" style="width: 20px; height: 20px;"></span> Generating...';
+      predictionsContainer.classList.add('hidden');
+
+      try {
+        showAlert(`Generating ${days}-day prediction for ${symbol}... This may take up to 60 seconds for first-time predictions.`, 'info');
+        
+        const result = await api.predictions.get(symbol, days);
+        
+        if (!result.predictions || result.predictions.length === 0) {
+          showAlert('No predictions generated. Make sure data is collected for this symbol.', 'warning');
+          return;
+        }
+
+        // Display predictions
+        predictionsContainer.classList.remove('hidden');
+        document.getElementById('prediction-symbol').textContent = symbol;
+        
+        predictionsGrid.innerHTML = result.predictions.map(pred => {
+          const trendIcon = pred.trend_direction === 'up' ? '📈' : '📉';
+          const trendClass = pred.trend_direction === 'up' ? 'trend-up' : 'trend-down';
+          const confidencePercent = (pred.confidence_score * 100).toFixed(0);
+          
+          return `
+            <div class="prediction-card">
+              <div class="prediction-date">${pred.target_date}</div>
+              <div class="prediction-price">$${pred.predicted_price.toFixed(2)}</div>
+              <div class="prediction-trend ${trendClass}">
+                <span class="icon">${trendIcon}</span>
+                ${pred.trend_direction.toUpperCase()}
+              </div>
+              <div class="mt-2">
+                <div class="badge badge-primary">
+                  ${confidencePercent}% Confidence
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Update model info
+        const avgConf = (result.predictions.reduce((sum, p) => sum + p.confidence_score, 0) / result.predictions.length * 100).toFixed(0);
+        document.getElementById('model-source').textContent = result.predictions[0].model_source.toUpperCase();
+        document.getElementById('avg-confidence').textContent = `${avgConf}%`;
+        document.getElementById('pred-count').textContent = result.predictions.length;
+
+        showAlert(`Successfully generated ${result.predictions.length} predictions for ${symbol}!`, 'success');
+
+      } catch (error) {
+        showAlert(error.message || 'Failed to generate predictions. Make sure data is collected first.', 'danger');
+      } finally {
+        predictBtn.disabled = false;
+        predictBtn.innerHTML = '<span class="icon">🚀</span> Generate Prediction';
+      }
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const symbol = document.getElementById('symbol-input').value.trim().toUpperCase();
+      const days = parseInt(document.getElementById('days-input').value);
+      
+      if (!symbol) {
+        showAlert('Please enter a stock symbol', 'warning');
+        return;
+      }
+      
+      generatePrediction(symbol, days);
+    });
+
+    // Quick predict function
+    window.quickPredict = (symbol) => {
+      document.getElementById('symbol-input').value = symbol;
+      generatePrediction(symbol, 5);
+    };
+
+    // Check for symbol in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const symbolParam = urlParams.get('symbol');
+    if (symbolParam) {
+      document.getElementById('symbol-input').value = symbolParam;
+      generatePrediction(symbolParam, 5);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+2026-05-13 13:18:29 | INFO     | __main__:<module>:334 - Starting server on http://0.0.0.0:8000
+2026-05-13 13:31:03 | INFO     | app.tools.prediction_tools:predict_price:229 - Predicted 5 days for AAPL confidence=0.5 source=local

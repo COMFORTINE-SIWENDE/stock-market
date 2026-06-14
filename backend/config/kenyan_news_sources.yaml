@@ -1,0 +1,37 @@
+# Kenyan News Sources Configuration
+# This file defines the news sources for collecting financial news from Kenyan media outlets
+# Each source includes: name, type (rss/api), url, and enabled status
+
+sources:
+  - name: "Business Daily"
+    type: "rss"
+    url: "https://www.businessdailyafrica.com/bd/markets/rss"
+    enabled: true
+    description: "Business Daily Africa - Markets section RSS feed"
+    
+  - name: "The Nation Business"
+    type: "rss"
+    url: "https://nation.africa/kenya/business/rss"
+    enabled: true
+    description: "The Nation Kenya - Business section RSS feed"
+    
+  - name: "The Standard Business"
+    type: "rss"
+    url: "https://www.standardmedia.co.ke/business/rss"
+    enabled: true
+    description: "The Standard Kenya - Business section RSS feed"
+    
+  - name: "Capital FM Business"
+    type: "rss"
+    url: "https://www.capitalfm.co.ke/business/feed/"
+    enabled: true
+    description: "Capital FM Kenya - Business section RSS feed"
+    
+  # Additional sources can be added below
+  # Example API-based source (disabled by default):
+  # - name: "Kenyan Wall Street"
+  #   type: "api"
+  #   url: "https://api.kenyanwallstreet.com/v1/news"
+  #   api_key_env: "KENYAN_WALL_STREET_API_KEY"
+  #   enabled: false
+  #   description: "Kenyan Wall Street API for financial news"

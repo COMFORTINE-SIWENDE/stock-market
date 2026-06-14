@@ -84,36 +84,59 @@ def get_technical_indicators(symbol: str, date_range: tuple, session=None) -> di
 
 
 def fetch_news_articles(symbol: str, hours_back: int = 24) -> list[dict]:
-    """Fetch news articles from NewsAPI for a given symbol."""
+    """Fetch news articles from EventRegistry for a given symbol."""
     if not symbol:
         return [{"error": "symbol is required"}]
     if not settings.NEWS_API_KEY:
-        logger.warning("NEWS_API_KEY not configured, skipping NewsAPI fetch")
+        logger.warning("NEWS_API_KEY not configured, skipping news fetch")
         return []
     try:
-        from_dt = (datetime.utcnow() - timedelta(hours=hours_back)).strftime("%Y-%m-%dT%H:%M:%SZ")
-        url = "https://newsapi.org/v2/everything"
-        params = {
-            "q": symbol,
-            "from": from_dt,
-            "sortBy": "publishedAt",
-            "language": "en",
+        # Use EventRegistry API
+        url = "https://eventregistry.org/api/v1/article/getArticles"
+        
+        # Calculate date range
+        date_start = (datetime.utcnow() - timedelta(hours=hours_back)).strftime("%Y-%m-%d")
+        date_end = datetime.utcnow().strftime("%Y-%m-%d")
+        
+        payload = {
             "apiKey": settings.NEWS_API_KEY,
+            "query": {
+                "$query": {
+                    "$and": [
+                        {"keyword": symbol},
+                        {"dateStart": date_start, "dateEnd": date_end}
+                    ]
+                }
+            },
+            "resultType": "articles",
+            "articlesSortBy": "date",
+            "articlesCount": 100,
+            "includeArticleTitle": True,
+            "includeArticleBody": True,
+            "includeArticleUrl": True,
+            "includeArticleSource": True,
+            "includeArticleDate": True
         }
-        resp = requests.get(url, params=params, timeout=10)
+        
+        resp = requests.post(url, json=payload, timeout=15)
         if not resp.ok:
-            logger.error(f"NewsAPI error {resp.status_code} for {symbol}: {resp.text}")
+            logger.error(f"EventRegistry error {resp.status_code} for {symbol}: {resp.text}")
             return []
+        
         data = resp.json()
         articles = []
-        for art in data.get("articles", []):
+        
+        # Parse EventRegistry response format
+        for art in data.get("articles", {}).get("results", []):
             articles.append({
                 "title": art.get("title", ""),
-                "content": art.get("content") or art.get("description", ""),
+                "content": art.get("body", "")[:500] if art.get("body") else "",  # Truncate to 500 chars
                 "url": art.get("url", ""),
-                "source": art.get("source", {}).get("name", ""),
-                "published_at": art.get("publishedAt", ""),
+                "source": art.get("source", {}).get("title", "") if isinstance(art.get("source"), dict) else str(art.get("source", "")),
+                "published_at": art.get("date", "") or art.get("dateTime", ""),
             })
+        
+        logger.info(f"EventRegistry returned {len(articles)} articles for {symbol}")
         return articles
     except Exception as e:
         logger.error(f"fetch_news_articles failed for {symbol}: {e}")

@@ -293,16 +293,150 @@ async def agent_query(request):
         return _err(str(e), 500)
 
 
+# ── NSE market ────────────────────────────────────────────────────────────────
+
+async def nse_market_status(request):
+    try:
+        from app.services.trading_hours_validator import TradingHoursValidator
+        from app.services.timezone_handler import TimezoneHandler
+        from pathlib import Path
+        
+        holidays_config = Path(__file__).parent / 'config' / 'nse_holidays.yaml'
+        validator = TradingHoursValidator(holidays_config)
+        
+        now = TimezoneHandler.now_eat()
+        is_open = validator.is_market_open()
+        
+        result = {
+            "is_open": is_open,
+            "current_time_eat": TimezoneHandler.format_eat(now),
+            "trading_hours": "9:00 AM - 3:00 PM EAT",
+            "trading_days": "Monday - Friday"
+        }
+        
+        if not is_open:
+            next_open = validator.next_trading_day(now)
+            result["next_open"] = TimezoneHandler.format_eat(next_open)
+        
+        return _json(result)
+    except Exception as e:
+        logger.error(f"nse_market_status error: {e}")
+        return _err(str(e), 500)
+
+
+async def nse_backfill(request):
+    try:
+        body = await request.json()
+        symbols = body.get("symbols", [])
+        start_date = date.fromisoformat(body.get("start_date"))
+        end_date = date.fromisoformat(body.get("end_date", date.today().isoformat()))
+        
+        if not symbols:
+            return _err("symbols list required")
+        
+        from app.services.backfill_service import BackfillService
+        
+        backfill = BackfillService()
+        with get_sync_session() as session:
+            result = backfill.backfill_historical(symbols, start_date, end_date, session)
+        
+        return _json({
+            "total_collected": result.total_collected,
+            "total_failed": result.total_failed,
+            "duration_seconds": result.duration_seconds,
+            "details": result.total_records
+        })
+    except Exception as e:
+        logger.error(f"nse_backfill error: {e}")
+        return _err(str(e), 500)
+
+
+async def data_quality_metrics(request):
+    try:
+        symbol = request.rel_url.query.get("symbol")
+        market = request.rel_url.query.get("market")
+        days = int(request.rel_url.query.get("days", 30))
+        
+        from app.models.stock import DataQualityMetrics
+        from sqlmodel import select
+        from datetime import datetime, timedelta
+        
+        with get_sync_session() as session:
+            query = select(DataQualityMetrics)
+            
+            if symbol:
+                from app.models.stock import StockSymbol
+                stock_symbol = session.exec(
+                    select(StockSymbol).where(StockSymbol.symbol == symbol)
+                ).first()
+                if stock_symbol:
+                    query = query.where(DataQualityMetrics.symbol_id == stock_symbol.id)
+            
+            if market:
+                query = query.where(DataQualityMetrics.market == market)
+            
+            cutoff = datetime.utcnow() - timedelta(days=days)
+            query = query.where(DataQualityMetrics.recorded_at >= cutoff)
+            
+            metrics = session.exec(query).all()
+        
+        # Aggregate by error type
+        by_type = {}
+        for m in metrics:
+            if m.error_type not in by_type:
+                by_type[m.error_type] = 0
+            by_type[m.error_type] += 1
+        
+        return _json({
+            "total_failures": len(metrics),
+            "by_error_type": by_type,
+            "period_days": days
+        })
+    except Exception as e:
+        logger.error(f"data_quality_metrics error: {e}")
+        return _err(str(e), 500)
+
+
 # ── symbols ───────────────────────────────────────────────────────────────────
 
 async def search_symbols(request):
     q = request.rel_url.query.get("q", "").strip()
+    market = request.rel_url.query.get("market", "").strip().upper()
+    limit = int(request.rel_url.query.get("limit", 20))
+    
     if not q:
         return _err("q parameter required")
-    from app.tools.utility_tools import search_symbols as _search
+    
+    from app.models.stock import StockSymbol
+    from sqlmodel import select, or_
+    
     with get_sync_session() as session:
-        results = _search(q, session)
-    return _json({"results": results})
+        query = select(StockSymbol).where(
+            or_(
+                StockSymbol.symbol.ilike(f"%{q}%"),
+                StockSymbol.company_name.ilike(f"%{q}%")
+            )
+        )
+        
+        if market:
+            query = query.where(StockSymbol.market == market)
+        
+        query = query.limit(min(limit, 100))
+        results = session.exec(query).all()
+        
+        return _json({
+            "results": [
+                {
+                    "symbol": s.symbol,
+                    "company_name": s.company_name,
+                    "market": s.market,
+                    "currency": s.currency,
+                    "exchange": s.exchange,
+                    "is_active": s.is_active
+                }
+                for s in results
+            ]
+        })
 
 
 # ── app factory ───────────────────────────────────────────────────────────────
@@ -325,6 +459,10 @@ def create_app():
     app.router.add_get("/predictions/{symbol}/backtest", backtest)
     app.router.add_post("/agent/query", agent_query)
     app.router.add_get("/symbols/search", search_symbols)
+    # NSE-specific endpoints
+    app.router.add_get("/api/v1/market/nse/status", nse_market_status)
+    app.router.add_post("/api/v1/data/backfill", nse_backfill)
+    app.router.add_get("/api/v1/data-quality/metrics", data_quality_metrics)
     return app
 
 

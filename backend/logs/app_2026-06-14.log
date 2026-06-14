@@ -1,0 +1,48 @@
+2026-06-14 14:42:19 | INFO     | __main__:<module>:472 - Starting server on http://0.0.0.0:8000
+2026-06-14 14:42:48 | INFO     | app.services.data_service:collect_stock_data:107 - Collecting stock data for APPLE from 2026-06-11 to 2026-06-14
+2026-06-14 14:42:48 | INFO     | app.services.data_service:collect_stock_data:111 - Detected market: US for APPLE
+2026-06-14 14:42:55 | INFO     | app.services.data_service:_get_or_create_symbol:91 - Created new symbol: APPLE (US, USD)
+2026-06-14 14:43:07 | INFO     | app.services.data_service:_collect_us_stock_data:252 - Inserted 0 new stock records for APPLE
+2026-06-14 14:43:07 | INFO     | app.services.data_service:collect_news:267 - Collecting news for APPLE (last 24h)
+2026-06-14 14:43:10 | INFO     | app.tools.data_tools:fetch_news_articles:139 - EventRegistry returned 100 articles for APPLE
+2026-06-14 14:44:05 | INFO     | app.services.data_service:_collect_us_news:377 - Inserted 100 new articles for APPLE
+2026-06-14 14:44:40 | INFO     | app.services.data_service:collect_stock_data:107 - Collecting stock data for AAPL from 2026-06-07 to 2026-06-14
+2026-06-14 14:44:40 | INFO     | app.services.data_service:collect_stock_data:111 - Detected market: US for AAPL
+2026-06-14 14:44:43 | INFO     | app.services.data_service:_collect_us_stock_data:252 - Inserted 0 new stock records for AAPL
+2026-06-14 14:44:43 | INFO     | app.services.data_service:collect_news:267 - Collecting news for AAPL (last 24h)
+2026-06-14 14:44:45 | INFO     | app.tools.data_tools:fetch_news_articles:139 - EventRegistry returned 36 articles for AAPL
+2026-06-14 14:45:06 | INFO     | app.services.data_service:_collect_us_news:377 - Inserted 34 new articles for AAPL
+2026-06-14 17:05:10 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=102 score=0.557 classification=positive duration=1.12s
+2026-06-14 17:05:12 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=103 score=-0.495 classification=negative duration=1.94s
+2026-06-14 17:05:13 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=104 score=0.532 classification=positive duration=1.13s
+2026-06-14 17:05:15 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=105 score=0.708 classification=positive duration=1.71s
+2026-06-14 17:05:16 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=106 score=0.708 classification=positive duration=1.23s
+2026-06-14 17:05:17 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=107 score=0.215 classification=positive duration=1.31s
+2026-06-14 17:05:19 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=108 score=0.443 classification=positive duration=1.59s
+2026-06-14 17:05:21 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=109 score=0.151 classification=positive duration=1.71s
+2026-06-14 17:05:22 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=110 score=0.351 classification=positive duration=1.35s
+2026-06-14 17:05:23 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=111 score=0.351 classification=positive duration=1.11s
+2026-06-14 17:05:24 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=112 score=-0.137 classification=negative duration=1.17s
+2026-06-14 17:05:26 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=113 score=0.351 classification=positive duration=1.19s
+2026-06-14 17:05:27 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=114 score=0.404 classification=positive duration=1.10s
+2026-06-14 17:05:28 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=115 score=0.485 classification=positive duration=1.13s
+2026-06-14 17:05:29 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=116 score=-0.079 classification=negative duration=1.13s
+2026-06-14 17:05:30 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=117 score=0.485 classification=positive duration=1.20s
+2026-06-14 17:05:31 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=118 score=0.556 classification=positive duration=1.10s
+2026-06-14 17:05:33 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=119 score=0.556 classification=positive duration=1.29s
+2026-06-14 17:05:34 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=120 score=0.556 classification=positive duration=1.36s
+2026-06-14 17:05:35 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=121 score=0.501 classification=positive duration=1.23s
+2026-06-14 17:05:36 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=122 score=0.000 classification=neutral duration=1.32s
+2026-06-14 17:05:38 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=123 score=0.539 classification=positive duration=1.19s
+2026-06-14 17:05:39 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=124 score=0.188 classification=positive duration=1.18s
+2026-06-14 17:05:40 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=125 score=0.000 classification=neutral duration=1.57s
+2026-06-14 17:05:42 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=126 score=0.188 classification=positive duration=1.35s
+2026-06-14 17:05:43 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=127 score=0.188 classification=positive duration=1.51s
+2026-06-14 17:05:45 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=128 score=0.631 classification=positive duration=1.72s
+2026-06-14 17:05:47 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=129 score=0.000 classification=neutral duration=1.70s
+2026-06-14 17:05:48 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=130 score=0.622 classification=positive duration=1.45s
+2026-06-14 17:05:50 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=131 score=0.650 classification=positive duration=1.79s
+2026-06-14 17:05:51 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=132 score=0.347 classification=positive duration=1.19s
+2026-06-14 17:05:53 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=133 score=0.616 classification=positive duration=1.49s
+2026-06-14 17:05:54 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=134 score=0.616 classification=positive duration=1.27s
+2026-06-14 17:05:56 | INFO     | app.tools.sentiment_tools:analyze_article_sentiment:92 - Sentiment article_id=101 score=0.367 classification=positive duration=1.81s

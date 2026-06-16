@@ -13,3 +13,5 @@ wheels/
 test
 test/
 /test/
+.kiro/
+docs/

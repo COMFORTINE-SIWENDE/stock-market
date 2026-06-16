@@ -285,15 +285,36 @@ def _collect_nse_news(
     symbol: str,
     hours_back: int,
 ) -> int:
-    """Collect Kenyan news for NSE stocks."""
-    kenyan_collector = _get_kenyan_news_collector()
+    """Collect Kenyan news for NSE stocks using EventRegistry."""
+    from app.tools.data_tools import fetch_news_articles
     
     try:
-        # Collect news from Kenyan sources
-        articles = kenyan_collector.collect_news(symbol, hours_back)
+        # Use EventRegistry with company name for better results
+        # Map NSE symbols to company keywords for better news matching
+        company_keywords = {
+            "SCOM.NR": "Safaricom",
+            "KCB.NR": "KCB Kenya",
+            "EQTY.NR": "Equity Bank Kenya",
+            "EABL.NR": "EABL Kenya Breweries",
+            "COOP.NR": "Co-operative Bank Kenya",
+            "ABSA.NR": "Absa Kenya",
+            "SCBK.NR": "Standard Chartered Kenya",
+            "BAMB.NR": "Bamburi Cement",
+            "BAT.NR": "British American Tobacco Kenya",
+            "DTBK.NR": "Diamond Trust Bank Kenya",
+            "NCBA.NR": "NCBA Kenya",
+            "NMG.NR": "Nation Media Kenya",
+            "SBIC.NR": "Stanbic Kenya",
+        }
+        
+        # Get company-specific keyword or use base symbol
+        search_term = company_keywords.get(symbol, symbol.replace(".NR", ""))
+        
+        # Collect news from EventRegistry
+        articles = fetch_news_articles(search_term, hours_back)
         
         if not articles:
-            logger.info(f"No news articles found for NSE stock {symbol}")
+            logger.info(f"No news articles found for NSE stock {symbol} (searched: {search_term})")
             return 0
         
         inserted = 0

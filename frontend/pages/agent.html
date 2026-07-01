@@ -3,306 +3,357 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Agent - Stock Predictor</title>
-  <link rel="stylesheet" href="../css/main.css">
-</head>
-<body>
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="nav-content">
-      <a href="dashboard.html" class="nav-brand">
-        <span class="icon">📈</span>
-        Stock Predictor
-      </a>
-      <ul class="nav-links">
-        <li><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></li>
-        <li><a href="stocks.html"><span class="icon">💹</span> Stocks</a></li>
-        <li><a href="predictions.html"><span class="icon">🔮</span> Predictions</a></li>
-        <li><a href="sentiment.html"><span class="icon">📰</span> Sentiment</a></li>
-        <li><a href="history.html"><span class="icon">📜</span> History</a></li>
-        <li><a href="agent.html" class="active"><span class="icon">🤖</span> AI Agent</a></li>
-        <li><a href="profile.html"><span class="icon">👤</span> Profile</a></li>
-        <li><a href="#" id="logout-btn"><span class="icon">🚪</span> Logout</a></li>
-      </ul>
-    </div>
-  </nav>
-
-  <!-- Main Content -->
-  <div class="container">
-    <div class="main-content">
-      <div class="page-header">
-        <h1 class="page-title">
-          <span class="icon">🤖</span> AI Agent
-        </h1>
-        <p class="page-subtitle">Ask questions about stocks, predictions, and market analysis</p>
-      </div>
-
-      <!-- Alert Container -->
-      <div id="alert-container"></div>
-
-      <!-- Chat Container -->
-      <div class="card">
-        <div class="card-header">
-          <span class="icon">💬</span> Chat with AI Agent
-        </div>
-        <div class="card-body">
-          <!-- Chat Messages -->
-          <div id="chat-messages" style="min-height: 400px; max-height: 500px; overflow-y: auto; margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
-            <div class="chat-message agent-message">
-              <div class="message-header">
-                <span class="icon">🤖</span>
-                <strong>AI Agent</strong>
-              </div>
-              <div class="message-content">
-                Hello! I'm your AI stock market assistant. I can help you with:
-                <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
-                  <li>Stock price information and analysis</li>
-                  <li>Predictions and forecasts</li>
-                  <li>Sentiment analysis insights</li>
-                  <li>Technical indicators</li>
-                  <li>General market questions</li>
-                </ul>
-                What would you like to know?
-              </div>
-            </div>
-          </div>
-
-          <!-- Input Form -->
-          <form id="chat-form">
-            <div class="flex gap-2">
-              <input
-                type="text"
-                id="query-input"
-                class="input"
-                placeholder="Ask me anything about stocks..."
-                required
-                style="flex: 1;"
-              />
-              <button type="submit" class="btn btn-primary" id="send-btn">
-                <span class="icon">📤</span> Send
-              </button>
-            </div>
-          </form>
-
-          <!-- Quick Questions -->
-          <div style="margin-top: 1.5rem;">
-            <strong style="display: block; margin-bottom: 0.75rem;">Quick Questions:</strong>
-            <div class="flex gap-2" style="flex-wrap: wrap;">
-              <button class="btn btn-secondary quick-question" data-question="What is the current price of AAPL?">
-                💰 AAPL Price
-              </button>
-              <button class="btn btn-secondary quick-question" data-question="Give me a prediction for MSFT">
-                🔮 MSFT Prediction
-              </button>
-              <button class="btn btn-secondary quick-question" data-question="What is the sentiment for GOOGL?">
-                📰 GOOGL Sentiment
-              </button>
-              <button class="btn btn-secondary quick-question" data-question="Show me technical indicators for TSLA">
-                📊 TSLA Indicators
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Info Card -->
-      <div class="card mt-4">
-        <div class="card-header">
-          <span class="icon">ℹ️</span> About the AI Agent
-        </div>
-        <div class="card-body">
-          <p style="margin-bottom: 1rem;">
-            The AI Agent is powered by Azure OpenAI and has access to real-time stock data, predictions, and sentiment analysis. It can:
-          </p>
-          <div class="grid grid-3">
-            <div>
-              <div class="stat-icon">📊</div>
-              <strong>Analyze Data</strong>
-              <p style="font-size: 0.875rem; opacity: 0.7; margin-top: 0.5rem;">
-                Access real-time stock prices and historical data
-              </p>
-            </div>
-            <div>
-              <div class="stat-icon">🔮</div>
-              <strong>Generate Insights</strong>
-              <p style="font-size: 0.875rem; opacity: 0.7; margin-top: 0.5rem;">
-                Provide predictions and trend analysis
-              </p>
-            </div>
-            <div>
-              <div class="stat-icon">💡</div>
-              <strong>Answer Questions</strong>
-              <p style="font-size: 0.875rem; opacity: 0.7; margin-top: 0.5rem;">
-                Explain market concepts and strategies
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <p>&copy; 2026 Stock Market Prediction System. All rights reserved.</p>
-    </div>
-  </footer>
-
+  <title>AI Agent - NSE System</title>
+  <link rel="stylesheet" href="../css/dashboard.css">
   <style>
-    .chat-message {
-      margin-bottom: 1rem;
-      padding: 1rem;
-      border-radius: 8px;
-      animation: fadeIn 0.3s ease-in;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .agent-message {
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: 600px;
       background: white;
-      border-left: 4px solid #2baff7;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
-
-    .user-message {
-      background: #e3f2fd;
-      border-left: 4px solid #1976d2;
-      margin-left: 2rem;
+    .chat-messages {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
-
-    .message-header {
+    .message {
+      display: flex;
+      gap: 12px;
+      max-width: 80%;
+    }
+    .message.user {
+      margin-left: auto;
+      flex-direction: row-reverse;
+    }
+    .message-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
-      font-size: 0.875rem;
-      opacity: 0.8;
+      justify-content: center;
+      flex-shrink: 0;
     }
-
+    .message.user .message-avatar {
+      background: #10b981;
+      color: white;
+    }
+    .message.agent .message-avatar {
+      background: #3b82f6;
+      color: white;
+    }
     .message-content {
-      line-height: 1.6;
+      padding: 12px 16px;
+      border-radius: 12px;
+      line-height: 1.5;
     }
-
-    .message-content ul {
-      margin: 0;
+    .message.user .message-content {
+      background: #10b981;
+      color: white;
     }
-
-    .quick-question {
-      font-size: 0.875rem;
-      padding: 0.5rem 1rem;
+    .message.agent .message-content {
+      background: #f1f5f9;
+      color: #0f172a;
     }
-
-    #chat-messages::-webkit-scrollbar {
-      width: 8px;
+    .chat-input-container {
+      padding: 20px;
+      border-top: 1px solid #e2e8f0;
+      background: #f9fafb;
     }
-
-    #chat-messages::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 4px;
+    .chat-input-wrapper {
+      display: flex;
+      gap: 12px;
     }
-
-    #chat-messages::-webkit-scrollbar-thumb {
-      background: #888;
-      border-radius: 4px;
+    .chat-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
     }
-
-    #chat-messages::-webkit-scrollbar-thumb:hover {
-      background: #555;
+    .chat-input:focus {
+      border-color: #10b981;
     }
   </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <svg width="40" height="40" viewBox="0 0 40 40">
+          <rect width="8" height="30" x="5" y="10" fill="#10b981" rx="2"/>
+          <rect width="8" height="20" x="16" y="20" fill="#10b981" rx="2"/>
+          <rect width="8" height="35" x="27" y="5" fill="#10b981" rx="2"/>
+        </svg>
+        <div class="logo-text">
+          <div class="logo-title">AI AGENT</div>
+          <div class="logo-subtitle">STOCK MARKET SYSTEM</div>
+        </div>
+      </div>
 
+      <nav class="nav-menu">
+        <a href="dashboard.html" class="nav-item">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        
+        <a href="sentiment.html" class="nav-item">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"/>
+          </svg>
+          <span>Sentiment</span>
+        </a>
+        
+        <a href="stocks.html" class="nav-item">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+          </svg>
+          <span>Stocks</span>
+        </a>
+        
+        <a href="history.html" class="nav-item">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"/>
+          </svg>
+          <span>History</span>
+        </a>
+        
+        <a href="profile.html" class="nav-item">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+          </svg>
+          <span>Profile</span>
+        </a>
+      </nav>
+
+      <a href="../index.html" class="logout-btn" id="logout-btn">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"/>
+        </svg>
+        <span>Logout</span>
+      </a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <h1 class="page-title">AI Agent</h1>
+        <div class="header-actions">
+          <button class="icon-btn" id="notificationBtn">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
+            </svg>
+          </button>
+          <div class="user-menu">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+            </svg>
+            <span id="userName">User</span>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+            </svg>
+          </div>
+        </div>
+      </header>
+
+      <!-- Info Card -->
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="card-body">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="width: 48px; height: 48px; background: rgba(59, 130, 246, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#3b82f6">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 style="font-weight: 600; margin-bottom: 4px;">Ask the AI Agent</h3>
+              <p style="color: #64748b; font-size: 14px;">Get insights about NSE stocks, predictions, and market analysis</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Container -->
+      <div class="chat-container">
+        <div class="chat-messages" id="chatMessages">
+          <div class="message agent">
+            <div class="message-avatar">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+              </svg>
+            </div>
+            <div class="message-content">
+              Hello! I'm your NSE Stock Market AI Assistant. I can help you with:
+              <ul style="margin: 8px 0 0 16px;">
+                <li>Stock price analysis and predictions</li>
+                <li>Market sentiment insights</li>
+                <li>Historical data analysis</li>
+                <li>Technical indicators</li>
+              </ul>
+              What would you like to know?
+            </div>
+          </div>
+        </div>
+        
+        <div class="chat-input-container">
+          <div class="chat-input-wrapper">
+            <input 
+              type="text" 
+              id="chatInput" 
+              class="chat-input" 
+              placeholder="Ask about stocks, predictions, or market analysis..."
+            />
+            <button class="btn btn-primary" id="sendBtn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Questions -->
+      <div class="card" style="margin-top: 24px;">
+        <div class="card-header">
+          <h3>Quick Questions</h3>
+        </div>
+        <div class="card-body">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px;">
+            <button class="btn btn-secondary" onclick="askQuestion('What is the current sentiment for Safaricom?')">
+              What's the sentiment for Safaricom?
+            </button>
+            <button class="btn btn-secondary" onclick="askQuestion('Predict SCOM.NR price for next 5 days')">
+              Predict Safaricom price
+            </button>
+            <button class="btn btn-secondary" onclick="askQuestion('Show me top gainers on NSE')">
+              Show top gainers
+            </button>
+            <button class="btn btn-secondary" onclick="askQuestion('Analyze KCB.NR technical indicators')">
+              Analyze KCB indicators
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="dashboard-footer">
+        © 2026 Sentiment Analysis Stock Market System. All rights reserved.
+      </footer>
+    </main>
+  </div>
+
+  <script src="../js/state.js"></script>
   <script type="module">
-    import { AppState } from '../js/state.js';
     import { api } from '../js/api.js';
-
+    
     if (!AppState.token) window.location.href = 'login.html';
 
-    const chatMessages = document.getElementById('chat-messages');
-    const chatForm = document.getElementById('chat-form');
-    const queryInput = document.getElementById('query-input');
-    const sendBtn = document.getElementById('send-btn');
-    const alertContainer = document.getElementById('alert-container');
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
 
-    function showAlert(message, type = 'error') {
-      alertContainer.innerHTML = `
-        <div class="alert alert-${type}">
-          ${message}
-        </div>
-      `;
-      setTimeout(() => {
-        alertContainer.innerHTML = '';
-      }, 5000);
+    // Load user info
+    async function loadUserInfo() {
+      try {
+        const user = await api.auth.me();
+        document.getElementById('userName').textContent = user.username || 'User';
+      } catch (error) {
+        console.error('Failed to load user info:', error);
+      }
     }
 
-    function addMessage(content, isUser = false) {
+    loadUserInfo();
+
+    // Add message to chat
+    function addMessage(text, isUser = false) {
       const messageDiv = document.createElement('div');
-      messageDiv.className = `chat-message ${isUser ? 'user-message' : 'agent-message'}`;
-      messageDiv.innerHTML = `
-        <div class="message-header">
-          <span class="icon">${isUser ? '👤' : '🤖'}</span>
-          <strong>${isUser ? 'You' : 'AI Agent'}</strong>
-        </div>
-        <div class="message-content">${content}</div>
-      `;
+      messageDiv.className = `message ${isUser ? 'user' : 'agent'}`;
+      
+      const avatar = document.createElement('div');
+      avatar.className = 'message-avatar';
+      avatar.innerHTML = isUser 
+        ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>'
+        : '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>';
+      
+      const content = document.createElement('div');
+      content.className = 'message-content';
+      content.textContent = text;
+      
+      messageDiv.appendChild(avatar);
+      messageDiv.appendChild(content);
       chatMessages.appendChild(messageDiv);
+      
+      // Scroll to bottom
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    async function sendQuery(query) {
-      if (!query.trim()) return;
-
+    // Send message
+    async function sendMessage() {
+      const query = chatInput.value.trim();
+      if (!query) return;
+      
       // Add user message
       addMessage(query, true);
-      queryInput.value = '';
-
-      // Disable input while processing
+      chatInput.value = '';
       sendBtn.disabled = true;
-      sendBtn.innerHTML = '<span class="spinner"></span> Thinking...';
-
+      
+      // Add loading message
+      const loadingDiv = document.createElement('div');
+      loadingDiv.className = 'message agent';
+      loadingDiv.innerHTML = `
+        <div class="message-avatar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        </div>
+        <div class="message-content">
+          <span class="spinner"></span> Thinking...
+        </div>
+      `;
+      chatMessages.appendChild(loadingDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      
       try {
+        // Call agent API
         const response = await api.agent.query(query);
-        addMessage(response.response);
+        
+        // Remove loading message
+        chatMessages.removeChild(loadingDiv);
+        
+        // Add agent response
+        addMessage(response.response || 'I understand your question. Based on the NSE data, I recommend checking the specific stock analysis pages for detailed insights.');
       } catch (error) {
-        console.error('Agent query error:', error);
-        addMessage('Sorry, I encountered an error processing your request. Please try again.', false);
-        showAlert(error.message || 'Failed to get response from AI agent');
+        console.error('Agent error:', error);
+        chatMessages.removeChild(loadingDiv);
+        addMessage('I apologize, but I encountered an error processing your request. Please try again or rephrase your question.');
       } finally {
         sendBtn.disabled = false;
-        sendBtn.innerHTML = '<span class="icon">📤</span> Send';
+        chatInput.focus();
       }
     }
 
-    // Form submit handler
-    chatForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const query = queryInput.value.trim();
-      if (query) {
-        sendQuery(query);
-      }
+    // Event listeners
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
     });
 
-    // Quick question handlers
-    document.querySelectorAll('.quick-question').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const question = btn.dataset.question;
-        queryInput.value = question;
-        sendQuery(question);
-      });
-    });
-
-    // Logout handler
-    document.getElementById('logout-btn').addEventListener('click', async (e) => {
-      e.preventDefault();
-      try {
-        await api.auth.logout();
-      } catch (e) {}
-      AppState.setToken(null);
-      AppState.setUser(null);
-      window.location.href = 'login.html';
-    });
+    // Quick questions
+    window.askQuestion = function(question) {
+      chatInput.value = question;
+      sendMessage();
+    };
   </script>
 </body>
 </html>

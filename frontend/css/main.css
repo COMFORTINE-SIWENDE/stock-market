@@ -2,19 +2,19 @@
 
 /* Color Scheme */
 :root {
-  --card-bg: #e1e6e8;
-  --button-primary: #2baff7;
-  --button-hover: #1a9de6;
-  --text-dark: #000000;
+  --card-bg: #f9fafb;
+  --button-primary: #10b981;
+  --button-hover: #059669;
+  --text-dark: #0f172a;
   --text-light: #ffffff;
   --bg-white: #ffffff;
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
-  --border-radius: 9999px; /* Fully rounded */
-  --card-radius: 16px;
-  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --border-radius: 8px;
+  --card-radius: 12px;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Reset & Base Styles */
@@ -66,6 +66,10 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.nav-brand .icon {
+  font-size: 1.75rem;
 }
 
 .nav-links {

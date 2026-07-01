@@ -7,15 +7,15 @@ import sqlalchemy as sa
 class StockSymbol(SQLModel, table=True):
     __tablename__ = "stock_symbols"
     id: Optional[int] = Field(default=None, primary_key=True)
-    symbol: str = Field(unique=True, index=True)
+    symbol: str = Field(unique=True, index=True)  # Format: SCOM.NR
     company_name: Optional[str] = None
-    exchange: Optional[str] = None
+    exchange: str = Field(default="NSE")
     sector: Optional[str] = None
     industry: Optional[str] = None
     is_active: bool = Field(default=True)
-    market: str = Field(default="US", index=True)
-    currency: str = Field(default="USD")
-    base_symbol: Optional[str] = None
+    market: str = Field(default="NSE", index=True)
+    currency: str = Field(default="KES")
+    base_symbol: Optional[str] = None  # Symbol without .NR suffix
 
 
 class StockData(SQLModel, table=True):
@@ -30,8 +30,8 @@ class StockData(SQLModel, table=True):
     close: float
     volume: float
     adj_close: Optional[float] = None
-    market: str = Field(default="US", index=True)
-    currency: str = Field(default="USD")
+    market: str = Field(default="NSE", index=True)
+    currency: str = Field(default="KES")
 
 
 class DataQualityMetrics(SQLModel, table=True):

@@ -1,5 +1,3 @@
-import { AppState } from './state.js';
-
 const BASE_URL = 'http://localhost:8000';
 
 export class ApiError extends Error {
@@ -12,8 +10,9 @@ export class ApiError extends Error {
 
 async function request(method, path, body = null) {
   const headers = { 'Content-Type': 'application/json' };
-  if (AppState.token !== null) {
-    headers['Authorization'] = `Bearer ${AppState.token}`;
+  const token = localStorage.getItem('mm_token');
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
   }
 
   const options = { method, headers };
@@ -30,9 +29,8 @@ async function request(method, path, body = null) {
 
   if (!response.ok) {
     if (response.status === 401) {
-      AppState.setToken(null);
-      AppState.setUser(null);
-      window.location.hash = '#/login';
+      localStorage.removeItem('mm_token');
+      window.location.href = 'login.html';
     }
     let data = {};
     try {
@@ -81,7 +79,14 @@ export const api = {
   symbols: {
     search: (query) => get(`/symbols/search?q=${encodeURIComponent(query)}`),
   },
+  market: {
+    nseStatus: () => get('/api/v1/market/nse/status'),
+    dataQuality: () => get('/api/v1/data-quality/metrics'),
+  },
   agent: {
     query: (text) => post('/agent/query', { query: text }),
+  },
+  models: {
+    available: () => get('/predictions/models/available'),
   },
 };

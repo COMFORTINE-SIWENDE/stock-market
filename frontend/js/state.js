@@ -1,9 +1,9 @@
-// AppState singleton — central source of truth for the MarketMind AI SPA
+// AppState singleton — central source of truth for the app
 
 const _subscribers = [];
 
-export const AppState = {
-  currentSymbol: 'AAPL',
+const AppState = {
+  currentSymbol: 'SCOM.NR',
   currentUser: null,
   token: null,
   priceData: [],
@@ -41,8 +41,11 @@ export const AppState = {
   },
 };
 
-// Initialise token from localStorage if present
+// Initialize token from localStorage if present
 const _stored = localStorage.getItem('mm_token');
 if (_stored) {
   AppState.token = _stored;
 }
+
+// Make AppState globally available
+window.AppState = AppState;

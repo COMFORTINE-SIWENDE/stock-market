@@ -124,15 +124,71 @@ async def stock_data(request):
     symbol = request.match_info["symbol"].upper()
     start = request.rel_url.query.get("start", (date.today() - timedelta(days=365)).isoformat())
     end = request.rel_url.query.get("end", date.today().isoformat())
-    from app.tools.data_tools import fetch_historical_data
-    data = fetch_historical_data(symbol, start, end)
+    
+    # Fetch from database instead of Yahoo Finance
+    from app.models.stock import StockData, StockSymbol
+    from sqlmodel import select
+    
+    with get_sync_session() as session:
+        # Get stock symbol
+        stock_symbol = session.exec(
+            select(StockSymbol).where(StockSymbol.symbol == symbol)
+        ).first()
+        
+        if not stock_symbol:
+            return _json({"symbol": symbol, "data": []})
+        
+        # Get stock data
+        stock_data_records = session.exec(
+            select(StockData)
+            .where(StockData.symbol_id == stock_symbol.id)
+            .where(StockData.date >= start)
+            .where(StockData.date <= end)
+            .order_by(StockData.date)
+        ).all()
+        
+        data = [
+            {
+                "date": str(rec.date),
+                "open": rec.open,
+                "high": rec.high,
+                "low": rec.low,
+                "close": rec.close,
+                "volume": rec.volume,
+                "adj_close": rec.adj_close or rec.close
+            }
+            for rec in stock_data_records
+        ]
+    
     return _json({"symbol": symbol, "data": data})
 
 
 async def stock_price(request):
     symbol = request.match_info["symbol"].upper()
-    from app.tools.data_tools import fetch_current_price
-    price = fetch_current_price(symbol)
+    
+    # Fetch latest price from database
+    from app.models.stock import StockData, StockSymbol
+    from sqlmodel import select
+    
+    with get_sync_session() as session:
+        # Get stock symbol
+        stock_symbol = session.exec(
+            select(StockSymbol).where(StockSymbol.symbol == symbol)
+        ).first()
+        
+        if not stock_symbol:
+            return _json({"symbol": symbol, "price": 0.0})
+        
+        # Get latest stock data
+        latest = session.exec(
+            select(StockData)
+            .where(StockData.symbol_id == stock_symbol.id)
+            .order_by(StockData.date.desc())
+            .limit(1)
+        ).first()
+        
+        price = latest.close if latest else 0.0
+    
     return _json({"symbol": symbol, "price": price})
 
 
@@ -140,8 +196,75 @@ async def stock_indicators(request):
     symbol = request.match_info["symbol"].upper()
     start = request.rel_url.query.get("start", (date.today() - timedelta(days=60)).isoformat())
     end = request.rel_url.query.get("end", date.today().isoformat())
-    from app.tools.data_tools import get_technical_indicators
-    indicators = get_technical_indicators(symbol, (start, end))
+    
+    # Calculate indicators from database data
+    from app.models.stock import StockData, StockSymbol
+    from sqlmodel import select
+    
+    with get_sync_session() as session:
+        # Get stock symbol
+        stock_symbol = session.exec(
+            select(StockSymbol).where(StockSymbol.symbol == symbol)
+        ).first()
+        
+        if not stock_symbol:
+            return _json({"symbol": symbol, "indicators": {}})
+        
+        # Get stock data for calculation
+        stock_data_records = session.exec(
+            select(StockData)
+            .where(StockData.symbol_id == stock_symbol.id)
+            .where(StockData.date >= start)
+            .where(StockData.date <= end)
+            .order_by(StockData.date)
+        ).all()
+        
+        if not stock_data_records:
+            return _json({"symbol": symbol, "indicators": {}})
+        
+        closes = [rec.close for rec in stock_data_records]
+        
+        # Calculate SMA 5
+        sma5 = sum(closes[-5:]) / min(5, len(closes)) if len(closes) >= 5 else None
+        
+        # Calculate SMA 20
+        sma20 = sum(closes[-20:]) / min(20, len(closes)) if len(closes) >= 20 else None
+        
+        # Calculate RSI (14 period)
+        rsi = None
+        if len(closes) >= 15:
+            # Calculate price changes
+            changes = [closes[i] - closes[i-1] for i in range(1, len(closes))]
+            recent_changes = changes[-14:]
+            
+            gains = [c if c > 0 else 0 for c in recent_changes]
+            losses = [-c if c < 0 else 0 for c in recent_changes]
+            
+            avg_gain = sum(gains) / 14
+            avg_loss = sum(losses) / 14
+            
+            if avg_loss != 0:
+                rs = avg_gain / avg_loss
+                rsi = 100 - (100 / (1 + rs))
+            else:
+                rsi = 100
+        
+        # Calculate volatility
+        volatility = None
+        if len(closes) >= 2:
+            returns = [(closes[i] - closes[i-1]) / closes[i-1] for i in range(1, len(closes))]
+            recent = returns[-20:] if len(returns) >= 20 else returns
+            mean_r = sum(recent) / len(recent)
+            variance = sum((r - mean_r) ** 2 for r in recent) / len(recent)
+            volatility = (variance ** 0.5) * 100  # Convert to percentage
+        
+        indicators = {
+            "sma_5": sma5,
+            "sma_20": sma20,
+            "rsi": rsi,
+            "volatility": volatility
+        }
+    
     return _json({"symbol": symbol, "indicators": indicators})
 
 
@@ -207,48 +330,194 @@ async def analyze_sentiment(request):
 # ── predictions ───────────────────────────────────────────────────────────────
 
 async def get_predictions(request):
+    """Get price predictions using trained LSTM models"""
     symbol = request.match_info["symbol"].upper()
-    days = int(request.rel_url.query.get("days", 1))
+    days = int(request.rel_url.query.get("days", 7))
+    send_email = request.rel_url.query.get("send_email", "false").lower() == "true"
+    
+    # Ensure .NR suffix for NSE stocks
+    if not symbol.endswith('.NR'):
+        symbol = f"{symbol}.NR"
+    
     try:
-        from app.services.prediction_service import generate_prediction
+        from app.services.prediction_service import get_prediction_service
+        
+        prediction_service = get_prediction_service()
+        
         with get_sync_session() as session:
-            preds = generate_prediction(session, symbol, days)
-        return _json({
+            # Get user_id and email from token if available
+            user_id = None
+            user_email = None
+            token = request.headers.get("Authorization", "").removeprefix("Bearer ").strip()
+            if token:
+                try:
+                    from app.services.auth_service import verify_token
+                    user = verify_token(session, token)
+                    user_id = user.id
+                    user_email = user.email
+                except:
+                    pass
+            
+            # Generate prediction
+            if days == 1:
+                pred = prediction_service.predict_next_day(session, symbol, user_id)
+                if not pred:
+                    return _err(f"Failed to generate prediction for {symbol}. Model may not be available.", 500)
+                
+                predictions = [pred]
+            else:
+                predictions = prediction_service.predict_multiple_days(session, symbol, days, user_id)
+                if not predictions:
+                    return _err(f"Failed to generate predictions for {symbol}", 500)
+        
+        response_data = {
             "symbol": symbol,
             "predictions": [
                 {
-                    "target_date": str(p.target_date),
-                    "predicted_price": p.predicted_price,
-                    "confidence_score": p.confidence_score,
-                    "trend_direction": p.trend_direction,
-                    "model_source": p.model_source,
+                    "target_date": str(p['target_date']),
+                    "predicted_price": round(p['predicted_price'], 2),
+                    "current_price": round(p['current_price'], 2),
+                    "price_change": round(p['price_change'], 2),
+                    "price_change_pct": round(p['price_change_pct'], 2),
+                    "confidence_score": round(p['confidence_score'], 4),
+                    "trend_direction": p['trend_direction'],
+                    "model_source": p['model_source'],
+                    "model_mape": round(p['model_mape'], 2),
+                    "prediction_id": p.get('prediction_id')
                 }
-                for p in preds
+                for p in predictions
             ],
-        })
+            "last_data_date": str(predictions[0]['last_data_date']) if predictions else None
+        }
+        
+        # Send email if requested
+        if send_email and user_email:
+            try:
+                from app.services.stock_email_service import stock_email_service
+                
+                # Prepare prediction data for email
+                pred = predictions[0]
+                stock_email_service.send_stock_alert_email(
+                    to_email=user_email,
+                    symbol=symbol,
+                    alert_type="Prediction Alert",
+                    message=f"Our AI model predicts {symbol} will reach KES {pred['predicted_price']:.2f} on {pred['target_date']} with {int(pred['confidence_score'] * 100)}% confidence.",
+                    current_price=pred['current_price'],
+                    predicted_price=pred['predicted_price']
+                )
+                response_data['email_sent'] = True
+                logger.info(f"Prediction email sent to {user_email} for {symbol}")
+            except Exception as e:
+                logger.error(f"Failed to send prediction email: {e}")
+                response_data['email_sent'] = False
+        
+        return _json(response_data)
     except Exception as e:
         logger.error(f"get_predictions error: {e}")
+        import traceback
+        traceback.print_exc()
         return _err(str(e), 500)
 
 
 async def train_model(request):
+    """Train or retrain LSTM model for a stock (admin only)"""
     symbol = request.match_info["symbol"].upper()
+    
+    # Ensure .NR suffix
+    if not symbol.endswith('.NR'):
+        symbol = f"{symbol}.NR"
+    
     try:
-        from app.services.prediction_service import train_model as _train
-        with get_sync_session() as session:
-            metrics = _train(session, symbol)
-        return _json({"symbol": symbol, "mse": metrics["mse"], "mae": metrics["mae"]})
+        body = await request.json()
+        epochs = body.get("epochs", 50)
+        batch_size = body.get("batch_size", 32)
+        
+        return _json({
+            "message": "Model training not implemented in API. Use nse_lstm_trainer.py script",
+            "symbol": symbol,
+            "note": "Training requires significant compute resources and should be run offline"
+        })
     except Exception as e:
         logger.error(f"train_model error: {e}")
         return _err(str(e), 500)
 
 
 async def prediction_history(request):
+    """Get prediction history for a stock"""
     symbol = request.match_info["symbol"].upper()
-    from app.tools.prediction_tools import get_prediction_history
-    with get_sync_session() as session:
-        history = get_prediction_history(symbol, session)
-    return _json({"symbol": symbol, "history": history})
+    limit = int(request.rel_url.query.get("limit", 30))
+    
+    # Ensure .NR suffix
+    if not symbol.endswith('.NR'):
+        symbol = f"{symbol}.NR"
+    
+    try:
+        from app.models.prediction import Prediction
+        from app.models.stock import StockSymbol
+        from sqlmodel import select
+        
+        with get_sync_session() as session:
+            # Get stock symbol
+            stock_symbol = session.exec(
+                select(StockSymbol).where(StockSymbol.symbol == symbol)
+            ).first()
+            
+            if not stock_symbol:
+                return _json({"symbol": symbol, "history": []})
+            
+            # Get predictions
+            predictions = session.exec(
+                select(Prediction)
+                .where(Prediction.symbol_id == stock_symbol.id)
+                .order_by(Prediction.created_at.desc())
+                .limit(limit)
+            ).all()
+            
+            history = []
+            for p in predictions:
+                # Calculate accuracy if actual price is available
+                accuracy = None
+                error_pct = None
+                if p.actual_price:
+                    error = abs(p.predicted_price - p.actual_price)
+                    error_pct = (error / p.actual_price) * 100
+                    accuracy = max(0, 100 - error_pct)
+                
+                history.append({
+                    "id": p.id,
+                    "prediction_date": str(p.prediction_date),
+                    "target_date": str(p.target_date),
+                    "predicted_price": round(p.predicted_price, 2),
+                    "actual_price": round(p.actual_price, 2) if p.actual_price else None,
+                    "confidence_score": round(p.confidence_score, 4),
+                    "trend_direction": p.trend_direction,
+                    "model_source": p.model_source,
+                    "accuracy_pct": round(accuracy, 2) if accuracy else None,
+                    "error_pct": round(error_pct, 2) if error_pct else None,
+                    "created_at": str(p.created_at)
+                })
+        
+        return _json({"symbol": symbol, "history": history, "total": len(history)})
+    except Exception as e:
+        logger.error(f"prediction_history error: {e}")
+        return _err(str(e), 500)
+
+
+async def available_models(request):
+    """Get list of available trained models"""
+    try:
+        from app.services.prediction_service import get_prediction_service
+        
+        prediction_service = get_prediction_service()
+        models = prediction_service.get_available_models()
+        
+        return _json({
+            "models": models,
+            "total": len(models)
+        })
+    except Exception as e:
+        logger.error(f"available_models error: {e}")
+        return _err(str(e), 500)
 
 
 async def backtest(request):
@@ -400,26 +669,25 @@ async def data_quality_metrics(request):
 # ── symbols ───────────────────────────────────────────────────────────────────
 
 async def search_symbols(request):
+    """Search NSE stock symbols"""
     q = request.rel_url.query.get("q", "").strip()
-    market = request.rel_url.query.get("market", "").strip().upper()
     limit = int(request.rel_url.query.get("limit", 20))
-    
-    if not q:
-        return _err("q parameter required")
     
     from app.models.stock import StockSymbol
     from sqlmodel import select, or_
     
     with get_sync_session() as session:
-        query = select(StockSymbol).where(
-            or_(
-                StockSymbol.symbol.ilike(f"%{q}%"),
-                StockSymbol.company_name.ilike(f"%{q}%")
-            )
-        )
+        # Build query - NSE only
+        query = select(StockSymbol).where(StockSymbol.market == "NSE")
         
-        if market:
-            query = query.where(StockSymbol.market == market)
+        if q:
+            query = query.where(
+                or_(
+                    StockSymbol.symbol.ilike(f"%{q}%"),
+                    StockSymbol.company_name.ilike(f"%{q}%"),
+                    StockSymbol.base_symbol.ilike(f"%{q}%")
+                )
+            )
         
         query = query.limit(min(limit, 100))
         results = session.exec(query).all()
@@ -432,7 +700,8 @@ async def search_symbols(request):
                     "market": s.market,
                     "currency": s.currency,
                     "exchange": s.exchange,
-                    "is_active": s.is_active
+                    "is_active": s.is_active,
+                    "base_symbol": s.base_symbol
                 }
                 for s in results
             ]
@@ -457,6 +726,7 @@ def create_app():
     app.router.add_post("/predictions/{symbol}/train", train_model)
     app.router.add_get("/predictions/{symbol}/history", prediction_history)
     app.router.add_get("/predictions/{symbol}/backtest", backtest)
+    app.router.add_get("/predictions/models/available", available_models)
     app.router.add_post("/agent/query", agent_query)
     app.router.add_get("/symbols/search", search_symbols)
     # NSE-specific endpoints
@@ -468,6 +738,10 @@ def create_app():
 
 if __name__ == "__main__":
     from app.config.config import settings
-    app = create_app()
+    app_instance = create_app()
     logger.info(f"Starting server on http://0.0.0.0:8000")
-    web.run_app(app, host="0.0.0.0", port=8000)
+    web.run_app(app_instance, host="0.0.0.0", port=8000)
+
+# For uvicorn - export the factory function, not the instance
+def app():
+    return create_app()

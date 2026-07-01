@@ -1,7 +1,7 @@
 import requests
 import json
 
-API_KEY = ""
+API_KEY = "a6a13808-747c-4411-8f6b-731a3f6f171a"
 
 url = "https://eventregistry.org/api/v1/article/getArticles"
 

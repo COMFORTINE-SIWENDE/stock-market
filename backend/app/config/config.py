@@ -34,6 +34,16 @@ class Settings(BaseSettings):
     # External APIs (optional)
     NEWS_API_KEY: str = ""
     ALPHA_VANTAGE_API_KEY: str = ""
+    
+    # Email settings
+    EMAIL_HOST: str = "smtp.zoho.com"
+    EMAIL_PORT: int = 465
+    EMAIL_USE_SSL: bool = True
+    EMAIL_USE_TLS: bool = False
+    EMAIL_USERNAME: str = ""
+    EMAIL_PASSWORD: str = ""
+    EMAIL_FROM: str = ""
+    EMAIL_FROM_NAME: str = "NSE Stock Market System"
 
     @property
     def sync_database_url(self) -> str:

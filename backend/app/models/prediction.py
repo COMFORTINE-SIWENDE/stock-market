@@ -14,8 +14,8 @@ class Prediction(SQLModel, table=True):
     user_id: Optional[int] = Field(default=None, foreign_key="users.id")
     predicted_price: float
     confidence_score: float
-    trend_direction: str  # up / down / neutral
-    model_source: str  # local / azure
+    trend_direction: str    
+    model_source: str   
     prediction_date: date
     target_date: date
     actual_price: Optional[float] = None

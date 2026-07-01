@@ -3,127 +3,315 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register - Stock Predictor</title>
-  <link rel="stylesheet" href="../css/main.css">
+  <title>Create Account - NSE Sentiment Analysis</title>
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .auth-container {
+      width: 100%;
+      max-width: 450px;
+    }
+    
+    .auth-card {
+      background: white;
+      border-radius: 16px;
+      padding: 48px 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    .auth-logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    
+    .auth-logo svg {
+      margin-bottom: 16px;
+      filter: drop-shadow(0 4px 8px rgba(16, 185, 129, 0.3));
+    }
+    
+    .auth-logo-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #10b981;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    
+    .auth-logo-subtitle {
+      font-size: 11px;
+      font-weight: 600;
+      color: #64748b;
+      letter-spacing: 0.5px;
+    }
+    
+    .auth-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #0f172a;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    
+    .form-input:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+    
+    .form-hint {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    
+    .btn-auth {
+      width: 100%;
+      padding: 14px;
+      background: #10b981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-auth:hover {
+      background: #059669;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    
+    .btn-auth:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .auth-divider {
+      text-align: center;
+      margin: 24px 0 0 0;
+      padding-top: 24px;
+      border-top: 1px solid #e2e8f0;
+      color: #64748b;
+      font-size: 14px;
+    }
+    
+    .auth-divider a {
+      color: #10b981;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    
+    .auth-divider a:hover {
+      color: #059669;
+      text-decoration: underline;
+    }
+    
+    .alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      font-size: 14px;
+      display: none;
+    }
+    
+    .alert.show {
+      display: block;
+    }
+    
+    .alert-danger {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+    
+    .alert-success {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .auth-footer {
+      text-align: center;
+      margin-top: 24px;
+      color: #94a3b8;
+      font-size: 13px;
+    }
+  </style>
 </head>
 <body>
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="nav-content">
-      <a href="../index.html" class="nav-brand">
-        <span class="icon">📈</span>
-        Stock Predictor
-      </a>
-      <ul class="nav-links">
-        <li><a href="../index.html"><span class="icon">🏠</span> Home</a></li>
-        <li><a href="login.html"><span class="icon">🔐</span> Login</a></li>
-        <li><a href="register.html" class="active"><span class="icon">✨</span> Register</a></li>
-      </ul>
-    </div>
-  </nav>
-
-  <!-- Main Content -->
-  <div class="container">
-    <div class="main-content">
-      <div style="max-width: 500px; margin: 0 auto;">
-        <div class="page-header text-center">
-          <h1 class="page-title" style="justify-content: center;">
-            <span class="icon">✨</span> Create Account
-          </h1>
-          <p class="page-subtitle">Join us and start predicting stock prices</p>
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <svg width="50" height="50" viewBox="0 0 40 40">
+          <rect width="8" height="30" x="5" y="10" fill="#10b981" rx="2"/>
+          <rect width="8" height="20" x="16" y="20" fill="#10b981" rx="2"/>
+          <rect width="8" height="35" x="27" y="5" fill="#10b981" rx="2"/>
+        </svg>
+        <div class="auth-logo-title">SENTIMENT ANALYSIS</div>
+        <div class="auth-logo-subtitle">NSE STOCK MARKET SYSTEM</div>
+      </div>
+      
+      <h1 class="auth-title">Create Account</h1>
+      
+      <div id="alert-container"></div>
+      
+      <form id="register-form">
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input 
+            type="email" 
+            id="email" 
+            class="form-input"
+            placeholder="your@email.com"
+            required
+            autocomplete="email"
+          >
         </div>
-
-        <!-- Alert Container -->
-        <div id="alert-container"></div>
-
-        <!-- Register Form -->
-        <div class="card">
-          <form id="register-form">
-            <div class="form-group">
-              <label class="form-label" for="email">
-                <span class="icon">📧</span> Email
-              </label>
-              <input 
-                type="email" 
-                id="email" 
-                class="form-input" 
-                placeholder="your@email.com"
-                required
-              >
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="username">
-                <span class="icon">👤</span> Username
-              </label>
-              <input 
-                type="text" 
-                id="username" 
-                class="form-input" 
-                placeholder="Choose a username"
-                required
-              >
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="full_name">
-                <span class="icon">✍️</span> Full Name
-              </label>
-              <input 
-                type="text" 
-                id="full_name" 
-                class="form-input" 
-                placeholder="Your full name"
-              >
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="password">
-                <span class="icon">🔒</span> Password
-              </label>
-              <input 
-                type="password" 
-                id="password" 
-                class="form-input" 
-                placeholder="Choose a strong password"
-                required
-                minlength="8"
-              >
-              <small style="opacity: 0.7; font-size: 0.875rem;">Minimum 8 characters</small>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="confirm_password">
-                <span class="icon">🔐</span> Confirm Password
-              </label>
-              <input 
-                type="password" 
-                id="confirm_password" 
-                class="form-input" 
-                placeholder="Confirm your password"
-                required
-              >
-            </div>
-
-            <button type="submit" class="btn btn-primary" style="width: 100%;" id="register-btn">
-              <span class="icon">🚀</span> Create Account
+        
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input 
+            type="text" 
+            id="username" 
+            class="form-input"
+            placeholder="Choose a username"
+            required
+            autocomplete="username"
+          >
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Full Name (Optional)</label>
+          <input 
+            type="text" 
+            id="full_name" 
+            class="form-input"
+            placeholder="Your full name"
+            autocomplete="name"
+          >
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div style="position: relative;">
+            <input 
+              type="password" 
+              id="password" 
+              class="form-input"
+              placeholder="Choose a strong password"
+              required
+              minlength="8"
+              autocomplete="new-password"
+              style="padding-right: 48px;"
+            >
+            <button 
+              type="button" 
+              id="toggle-password"
+              style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #64748b; padding: 4px;"
+            >
+              <svg id="eye-icon-1" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
             </button>
-          </form>
-
-          <div class="card-footer text-center">
-            <p>Already have an account? <a href="login.html" style="color: var(--button-primary); font-weight: 500;">Login here</a></p>
+          </div>
+          <div class="form-hint">Minimum 8 characters</div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          <div style="position: relative;">
+            <input 
+              type="password" 
+              id="confirm_password" 
+              class="form-input"
+              placeholder="Confirm your password"
+              required
+              autocomplete="new-password"
+              style="padding-right: 48px;"
+            >
+            <button 
+              type="button" 
+              id="toggle-confirm"
+              style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #64748b; padding: 4px;"
+            >
+              <svg id="eye-icon-2" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
+            </button>
           </div>
         </div>
-      </div>
+        
+        <button type="submit" class="btn-auth" id="register-btn">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"/>
+          </svg>
+          Create Account
+        </button>
+        
+        <div class="auth-divider">
+          Already have an account? <a href="login.html">Sign in</a>
+        </div>
+      </form>
+    </div>
+    
+    <div class="auth-footer">
+      © 2026 NSE Sentiment Analysis System
     </div>
   </div>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <p>&copy; 2026 Stock Market Prediction System. All rights reserved.</p>
-    </div>
-  </footer>
 
   <script type="module">
     import { api } from '../js/api.js';
@@ -131,11 +319,51 @@
     const form = document.getElementById('register-form');
     const alertContainer = document.getElementById('alert-container');
     const registerBtn = document.getElementById('register-btn');
+    const passwordInput = document.getElementById('password');
+    const confirmInput = document.getElementById('confirm_password');
+    const togglePassword = document.getElementById('toggle-password');
+    const toggleConfirm = document.getElementById('toggle-confirm');
+    const eyeIcon1 = document.getElementById('eye-icon-1');
+    const eyeIcon2 = document.getElementById('eye-icon-2');
+
+    // Toggle password visibility
+    togglePassword.addEventListener('click', () => {
+      const type = passwordInput.type === 'password' ? 'text' : 'password';
+      passwordInput.type = type;
+      
+      if (type === 'text') {
+        eyeIcon1.innerHTML = `
+          <path d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z"/>
+          <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z"/>
+        `;
+      } else {
+        eyeIcon1.innerHTML = `
+          <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+          <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"/>
+        `;
+      }
+    });
+
+    toggleConfirm.addEventListener('click', () => {
+      const type = confirmInput.type === 'password' ? 'text' : 'password';
+      confirmInput.type = type;
+      
+      if (type === 'text') {
+        eyeIcon2.innerHTML = `
+          <path d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z"/>
+          <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z"/>
+        `;
+      } else {
+        eyeIcon2.innerHTML = `
+          <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+          <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"/>
+        `;
+      }
+    });
 
     function showAlert(message, type = 'danger') {
       alertContainer.innerHTML = `
-        <div class="alert alert-${type}">
-          <span class="icon">${type === 'success' ? '✅' : '❌'}</span>
+        <div class="alert alert-${type} show">
           ${message}
         </div>
       `;
@@ -147,10 +375,9 @@
       const email = document.getElementById('email').value.trim();
       const username = document.getElementById('username').value.trim();
       const fullName = document.getElementById('full_name').value.trim();
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirm_password').value;
+      const password = passwordInput.value;
+      const confirmPassword = confirmInput.value;
 
-      // Validation
       if (!email || !username || !password) {
         showAlert('Please fill in all required fields');
         return;
@@ -167,7 +394,7 @@
       }
 
       registerBtn.disabled = true;
-      registerBtn.innerHTML = '<span class="spinner" style="width: 20px; height: 20px; margin: 0;"></span> Creating account...';
+      registerBtn.innerHTML = '<span class="spinner"></span> Creating account...';
 
       try {
         await api.auth.register({
@@ -181,12 +408,17 @@
         
         setTimeout(() => {
           window.location.href = 'login.html';
-        }, 2000);
+        }, 1500);
 
       } catch (error) {
         showAlert(error.message || 'Registration failed. Please try again.');
         registerBtn.disabled = false;
-        registerBtn.innerHTML = '<span class="icon">🚀</span> Create Account';
+        registerBtn.innerHTML = `
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"/>
+          </svg>
+          Create Account
+        `;
       }
     });
   </script>
